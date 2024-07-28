@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="icon" type="image/svg+xml" href="/public/favicon.svg" />
+    <title>Denoms Studios</title>
+    <link rel="stylesheet" href="/public/styles.css">
+    <script src="/public/main.js"></script>
+</head>
+<body>
+    <div class="appbar">
+        <div class="lrg">
+            <div class="lfbr">
+                <a href="/">
+                    <div class="logo">
+                        <img src="/public/favicon.svg" alt="logo">
+                    </div>
+                </a>
+                <div>
+                    <a href="/timeline">
+                        <span>Timeline</span>
+                    </a>
+                    <a href="/releases">
+                        <span>Releases</span>
+                    </a>
+                    <a href="/statistics">
+                        <span>Statistics</span>
+                    </a>
+                </div>
+            </div>
+            <div class="rgbr">
+                <div>
+                    <a href="">
+                        <span>About</span>
+                    </a>
+                    <a href="">
+                        <span>Contacts</span>
+                    </a>
+                </div>
+                <select>
+                    <option value="1">Eng</option>
+                </select>
+            </div>
+        </div>
+        <div class="sml">
+            <div class="tpbr">
+                <a href="/">
+                    <div class="logo">
+                        <img src="/public/favicon.svg" alt="logo">
+                    </div>
+                </a>
+                <select>
+                    <option value="1">Eng</option>
+                </select>
+            </div>
+            <div class="btbr">
+                <div>
+                    <a href="/timeline">
+                        <span>Timeline</span>
+                    </a>
+                    <a href="/releases">
+                        <span>Releases</span>
+                    </a>
+                    <a href="/statistics">
+                        <span>Statistics</span>
+                    </a>
+                </div>
+                <div>
+                    <a href="">
+                        <span>About</span>
+                    </a>
+                    <a href="">
+                        <span>Contacts</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="hero">
+        <div class="extrml">
+            <span class="info">Read the release notes for more information</span>
+            <a class="btn" href="/release">
+                Release
+            </a>
+        </div>
+        <div class="words">
+            <img class="thumb" src={{.Thumbnail}} alt="thumb">
+            <div>
+                <span class="tlwrd">{{ .Title}}</span>
+                <span class="ctwrd">{{.Category}}</span>
+                <p>
+                    {{.Synopsis}}
+                </p>
+                <div class="rls">
+                    <span class="dtwrd">05 Jun 2025</span>
+                </div>
+            </div>
+        </div>
+        <div class="views">
+            <div>
+                <span class="tlwrd">{{.Title}}</span>
+            </div>
+            <video controls src="/public/home.mp4"></video>
+            <span class="info">Read the release notes for more information</span>
+            <a class="btn rla" href="/release">
+                Release
+            </a>
+        </div>
+    </div>
+
+    <div class="ftdiv">
+        <span>&copy;Denoms Studios</span>
+        <a href="http://" target="_blank" rel="noopener noreferrer">
+            Terms & conditions
+        </a>
+        <a href="http://" target="_blank" rel="noopener noreferrer">
+            Privacy
+        </a>
+    </div>
+</body>
+</html>
