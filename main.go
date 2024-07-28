@@ -1,36 +1,19 @@
 package main
 
 import (
+	"denomsstudios/model"
+	"denomsstudios/repo"
 	"fmt"
 	"html/template"
 	"net/http"
 	"strconv"
 )
 
-type Release struct {
-	Title, Category, Synopsis, Thumbnail, Date string
-}
-
-type Releases struct {
-	Items []Release
-}
-
-type Timeline struct {
-	Date, Title, Synopsis, Category, Id string
-}
-
 var htmlTemplates *template.Template
 
-var rels []Release = []Release{
-	{Title: "Loopies", Date: "15/07/2025", Synopsis: "Test research on loopies holes,\nA scientific documentary on the experiments, the results, and more", Category: "Scientific", Thumbnail: "/public/thum.png"},
-	{Title: "Books of w", Date: "15/09/2025", Synopsis: "Book on w poles, a fictional power\nharnesed on the highlands of orfords with dealy conditions\n but worth it rewards.", Category: "Fiction", Thumbnail: "/public/The Party Compst.png"},
-	{Title: "Volls on leads", Date: "11/12/2025", Synopsis: "on the loop of voll", Category: "Comedy", Thumbnail: "/"},
-}
-
-var times []Timeline = []Timeline{
-	{Title: "Loopies", Date: "15/07/2025", Synopsis: "Test loopies holes", Category: "Fun", Id: "1262"},
-	{Title: "Books of w", Date: "15/09/2025", Synopsis: "Book on w poles", Category: "Fiction", Id: "5162626"},
-	{Title: "Volls on leads", Date: "11/12/2025", Synopsis: "on the loop of voll", Category: "Comedy", Id: "1622"},
+var curRepo repo.Repository = repo.MemoryRepo{
+	Timeline: model.Timelines,
+	Releases: model.Releases,
 }
 
 func HandleTemplateRequest(writer http.ResponseWriter, request *http.Request) {
@@ -41,21 +24,21 @@ func HandleTemplateRequest(writer http.ResponseWriter, request *http.Request) {
 	case "/":
 		path = "index.html"
 		// get data required for the view
-		data = rels[0]
+		data = curRepo.RandomRelease()
 	case "/releases":
 		path = "releases.html"
-		data = rels
+		data = curRepo.AllRelease()
 		// get data required for the view
 	case "/release":
 		path = "release.html"
 		id := request.FormValue("id")
 		fmt.Printf("requested id: %s\n", id)
 		// get data required for the view
-		data = rels[0]
+		data = curRepo.RandomRelease()
 	case "/timeline":
 		path = "timeline.html"
 		// get data required for the view
-		data = times
+		data = curRepo.AllTimeline()
 	default:
 		http.NotFoundHandler()
 	}
@@ -72,6 +55,10 @@ func HandleTemplateRequest(writer http.ResponseWriter, request *http.Request) {
 }
 
 func main() {
+	// server := http.NewServeMux()
+
+	// server.HandleFunc("/", HandleTemplateRequest)
+
 	http.HandleFunc("/", HandleTemplateRequest)
 	http.HandleFunc("/releases", HandleTemplateRequest)
 	http.HandleFunc("/release", HandleTemplateRequest)
