@@ -82,7 +82,7 @@
     <div class="hero">
         <div class="extrml">
             <span class="info">Read the release notes for more information</span>
-            <a class="btn" href="/release">
+            <a class="btn" href="/release?id={{.Id}}">
                 Release
             </a>
         </div>
@@ -95,7 +95,13 @@
                     {{.Synopsis}}
                 </p>
                 <div class="rls">
-                    <span class="dtwrd">05 Jun 2025</span>
+                    {{ if .Future }}
+                    <span class="dtwrd">{{.HumanDate}}</span>
+                    {{ else }}
+                    <a class="btn watch" href="/release?id={{.Id}}">
+                        Watch Now
+                    </a>
+                    {{ end }}
                 </div>
             </div>
         </div>
@@ -103,9 +109,13 @@
             <div>
                 <span class="tlwrd">{{.Title}}</span>
             </div>
-            <video controls src="/public/home.mp4"></video>
+            {{ if eq .Trailer "" }}
+            <video controls src={{.Url}}></video>
+            {{ else }}
+            <video controls src={{.Trailer}}></video>
+            {{ end }}
             <span class="info">Read the release notes for more information</span>
-            <a class="btn rla" href="/release">
+            <a class="btn rla" href="/release?id={{.Id}}">
                 Release
             </a>
         </div>

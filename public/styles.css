@@ -5,7 +5,7 @@
 }
 
 body{
-    background: #1c1c1c;
+    background: #2c2c2c;
 }
 
 a{
@@ -16,7 +16,6 @@ a{
 .sml{
     display: flex;
     width: 100%;
-    background: #1c1c1c;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -42,7 +41,6 @@ a{
 .lrg{
     width: 100%;
     padding: 5px 40px;
-    background: #1c1c1c;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -61,7 +59,7 @@ a{
 select{
     outline: none;
     border: none;
-    color: #606060;
+    color: #808080;
     font-size: 14px;
     background: transparent;
     margin-left: 40px;
@@ -122,9 +120,15 @@ img{
 
 .btn{
     margin-top: 20px;
-    background: blue;
+    background: #0357ff;
     padding: 8px 20px;
     border-radius: 5px;
+    z-index: 1;
+    width: max-content;
+}
+
+.watch{
+    background: #cc0000;
 }
 
 .ctwrd{
@@ -188,7 +192,6 @@ video{
     align-items: center;
     padding: 20px;
     width: 100%;
-    background: #1c1c1c;
     color: #fff;
     font-size: 14px;
 }
