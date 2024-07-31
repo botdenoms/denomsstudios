@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="icon" type="image/svg+xml" href="/public/favicon.svg" />
+    <title>Denoms Studios</title>
+    <link rel="stylesheet" href="/public/styles.css">
+    <script src="/public/main.js"></script>
+</head>
+<body>
+    <div class="appbar">
+        <div class="lrg">
+            <div class="lfbr">
+                <a href="/">
+                    <div class="logo">
+                        <img src="/public/favicon.svg" alt="logo">
+                    </div>
+                </a>
+                <div>
+                    <a href="/timeline">
+                        <span>Timeline</span>
+                    </a>
+                    <a href="/releases">
+                        <span>Releases</span>
+                    </a>
+                    <a href="/statistics">
+                        <span>Statistics</span>
+                    </a>
+                </div>
+            </div>
+            <div class="rgbr">
+                <div>
+                    <a href="/about">
+                        <span>About</span>
+                    </a>
+                    <a href="/contacts">
+                        <span>Contacts</span>
+                    </a>
+                </div>
+                <select>
+                    <option value="1">Eng</option>
+                </select>
+            </div>
+        </div>
+        <div class="sml">
+            <div class="tpbr">
+                <a href="/">
+                    <div class="logo">
+                        <img src="/public/favicon.svg" alt="logo">
+                    </div>
+                </a>
+                <select>
+                    <option value="1">Eng</option>
+                </select>
+            </div>
+            <div class="btbr">
+                <div>
+                    <a href="/timeline">
+                        <span>Timeline</span>
+                    </a>
+                    <a href="/releases">
+                        <span>Releases</span>
+                    </a>
+                    <a href="/statistics">
+                        <span>Statistics</span>
+                    </a>
+                </div>
+                <div>
+                    <a href="/about">
+                        <span>About</span>
+                    </a>
+                    <a href="/contacts">
+                        <span>Contacts</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{ if eq .Title "" }}
+    <div class="error">
+        <p>{{ .Message }}</p>
+    </div>
+    {{ else }}
+    <div class="content">
+        <span class="tlwrd">{{ .Title }}</span>
+        <span class="ctwrd">{{ .Category }}</span>
+        <div class="ctrdiv">
+            <span>watch</span>
+            <video controls src={{.Url}}></video>
+        </div>
+        <p>
+            {{.Synopsis}}
+        </p>
+        <div class="wddiv">
+            <img class="thumbnl" src={{.Thumbnail}} alt="thumb">
+            <div class="lftdiv">
+                <span>Trailer</span>
+                <video controls src={{.Trailer}}></video>
+            </div>
+        </div>
+        <div>
+            <div class="kvpr">
+                <span class="kv">Title key</span>
+                <span class="vv">Title value</span>
+            </div>
+            <div class="kvpr">
+                <span class="kv">Title key</span>
+                <span class="vv">Title value</span>
+            </div>
+            <div class="kvpr">
+                <span class="kv">Title key</span>
+                <span class="vv">Title value</span>
+            </div>
+        </div>
+    </div>
+    {{ end }}
+
+    <div class="ftdiv">
+        <span>&copy;Denoms Studios</span>
+        <a href="/terms&conditions">
+            Terms & conditions
+        </a>
+        <a href="/privacy">
+            Privacy
+        </a>
+    </div>
+</body>
+</html>
