@@ -13,5 +13,5 @@ type Repository interface {
 
 	AllTimeline() []model.Timeline
 
-	ReleaseById(id string) model.Release
+	ReleaseById(id string) (model.Release, bool)
 }

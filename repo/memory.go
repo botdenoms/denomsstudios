@@ -32,6 +32,11 @@ func (r MemoryRepo) AllTimeline() []model.Timeline {
 	return r.Timeline
 }
 
-func (r MemoryRepo) ReleaseById(id string) model.Release {
-	return r.RandomRelease()
+func (r MemoryRepo) ReleaseById(id string) (model.Release, bool) {
+	for _, rel := range r.Releases {
+		if rel.Id == id {
+			return rel, false
+		}
+	}
+	return model.Release{}, true
 }

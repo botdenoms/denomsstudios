@@ -11,7 +11,7 @@ import (
 
 var htmlTemplates *template.Template
 
-var curRepo repo.Repository = repo.MemoryRepo{
+var curRepo repo.Repository = &repo.MemoryRepo{
 	Timeline: model.Timelines,
 	Releases: model.Releases,
 }
@@ -33,8 +33,17 @@ func HandleTemplateRequest(writer http.ResponseWriter, request *http.Request) {
 		path = "release.html"
 		id := request.FormValue("id")
 		fmt.Printf("requested id: %s\n", id)
+		if id == "" {
+			data = model.Response{Title: "", Message: "Id is required"}
+			break
+		}
 		// get data required for the view
-		data = curRepo.RandomRelease()
+		resp, err := curRepo.ReleaseById(id)
+		if err {
+			data = model.Response{Title: "", Message: "Release not found"}
+			break
+		}
+		data = resp
 	case "/timeline":
 		path = "timeline.html"
 		// get data required for the view
