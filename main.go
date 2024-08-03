@@ -3,10 +3,13 @@ package main
 import (
 	"denomsstudios/model"
 	"denomsstudios/repo"
+	"encoding/json"
 	"fmt"
 	"html/template"
 	"net/http"
 	"strconv"
+	"strings"
+	"time"
 )
 
 var htmlTemplates *template.Template
@@ -15,6 +18,9 @@ var curRepo repo.Repository = &repo.MemoryRepo{
 	Timeline: model.Timelines,
 	Releases: model.Releases,
 }
+
+var aday time.Duration = time.Duration(86400) * time.Second
+var amonth time.Duration = aday * 31
 
 func HandleTemplateRequest(writer http.ResponseWriter, request *http.Request) {
 	path := request.URL.Path
@@ -27,8 +33,82 @@ func HandleTemplateRequest(writer http.ResponseWriter, request *http.Request) {
 		data = curRepo.RandomRelease()
 	case "/releases":
 		path = "releases.html"
-		data = curRepo.AllRelease()
-		// get data required for the view
+		search := request.FormValue("s")
+		new := request.FormValue("n")
+		future := request.FormValue("f")
+		ealier := request.FormValue("e")
+		if search != "" {
+			fmt.Printf("Searching for: %s\n", search)
+			dt := curRepo.AllRelease()
+			tmp := []map[string]interface{}{}
+			for _, v := range dt {
+				if strings.Contains(v.Title, search) {
+					tmp = append(tmp, v.ToJson())
+					continue
+				}
+				if strings.Contains(v.Synopsis, search) {
+					tmp = append(tmp, v.ToJson())
+				}
+			}
+			data = tmp
+			writer.Header().Set("Content-Type", "application/json")
+			json.NewEncoder(writer).Encode(data)
+			return
+		} else if new != "" {
+			fmt.Printf("Searching for new releasaes\n")
+			dt := curRepo.AllRelease()
+			tmp := []map[string]interface{}{}
+			for _, v := range dt {
+				if v.Date.Before(time.Now()) {
+					df := time.Until(v.Date)
+					if df.Abs().Hours() < (amonth * 2).Abs().Hours() {
+						tmp = append(tmp, v.ToJson())
+					}
+				}
+			}
+			data = tmp
+			writer.Header().Set("Content-Type", "application/json")
+			json.NewEncoder(writer).Encode(data)
+			return
+		} else if future != "" {
+			fmt.Printf("Searching for future releasaes\n")
+			dt := curRepo.AllRelease()
+			tmp := []map[string]interface{}{}
+			for _, v := range dt {
+				if v.Date.After(time.Now()) {
+					tmp = append(tmp, v.ToJson())
+				}
+			}
+			data = tmp
+			writer.Header().Set("Content-Type", "application/json")
+			json.NewEncoder(writer).Encode(data)
+			return
+		} else if ealier != "" {
+			fmt.Printf("Searching for previous releasaes\n")
+			dt := curRepo.AllRelease()
+			tmp := []map[string]interface{}{}
+			for _, v := range dt {
+				if v.Date.Before(time.Now()) {
+					tmp = append(tmp, v.ToJson())
+				}
+			}
+			data = tmp
+			writer.Header().Set("Content-Type", "application/json")
+			json.NewEncoder(writer).Encode(data)
+			return
+		} else {
+			dt := curRepo.AllRelease()
+			var tmp []model.Release
+			for _, v := range dt {
+				if v.Date.Before(time.Now()) {
+					df := time.Until(v.Date)
+					if df.Abs().Hours() < (amonth * 2).Abs().Hours() {
+						tmp = append(tmp, v)
+					}
+				}
+			}
+			data = tmp
+		}
 	case "/release":
 		path = "release.html"
 		id := request.FormValue("id")
@@ -48,8 +128,8 @@ func HandleTemplateRequest(writer http.ResponseWriter, request *http.Request) {
 		path = "timeline.html"
 		// get data required for the view
 		data = curRepo.AllTimeline()
-	default:
-		http.NotFoundHandler()
+		// default:
+		// 	http.NotFoundHandler()
 	}
 
 	t := htmlTemplates.Lookup(path)
