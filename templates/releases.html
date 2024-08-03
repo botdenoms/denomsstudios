@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="icon" type="image/svg+xml" href="/public/favicon.svg" />
+    <title>Denoms Studios</title>
+    <link rel="stylesheet" href="/public/styles.css">
+</head>
+<body>
+    <div class="appbar">
+        <div class="lrg">
+            <div class="lfbr">
+                <a href="/">
+                    <div class="logo">
+                        <img src="/public/favicon.svg" alt="logo">
+                    </div>
+                </a>
+                <div>
+                    <a href="/timeline">
+                        <span>Timeline</span>
+                    </a>
+                    <a href="/releases">
+                        <span class="active">Releases</span>
+                    </a>
+                    <a href="/statistics">
+                        <span>Statistics</span>
+                    </a>
+                </div>
+            </div>
+            <div class="rgbr">
+                <div>
+                    <a href="/about">
+                        <span>About</span>
+                    </a>
+                    <a href="/contacts">
+                        <span>Contacts</span>
+                    </a>
+                </div>
+                <select>
+                    <option value="1">Eng</option>
+                </select>
+            </div>
+        </div>
+        <div class="sml">
+            <div class="tpbr">
+                <a href="/">
+                    <div class="logo">
+                        <img src="/public/favicon.svg" alt="logo">
+                    </div>
+                </a>
+                <select>
+                    <option value="1">Eng</option>
+                </select>
+            </div>
+            <div class="btbr">
+                <div>
+                    <a href="/timeline">
+                        <span>Timeline</span>
+                    </a>
+                    <a href="/releases">
+                        <span class="active">Releases</span>
+                    </a>
+                    <a href="/statistics">
+                        <span>Statistics</span>
+                    </a>
+                </div>
+                <div>
+                    <a href="/about">
+                        <span>About</span>
+                    </a>
+                    <a href="/contacts">
+                        <span>Contacts</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="content">
+        <div class="srcbar">
+            <div>
+                <div class="icon" id="icon" onclick="toggle()">
+                    <img src="/public/settings.svg" alt="search">
+                </div>
+                <input type="text" id="s" placeholder="Search ...">
+                <button class="fbtn" id="search" onclick="search()">Find</button>
+            </div>
+
+            <div class="advnc mbl hd"></div>
+
+            <div>
+                <button id="nbt" class="tbtn active" onclick="newRequest()">New</button>
+                <button id="fbt" class="tbtn" onclick="futureRequest()">Future</button>
+                <button id="ebt" class="tbtn" onclick="oldRequest()">Ealier</button>
+            </div>
+        </div>
+        <div class="advnc lgr hd"></div>
+
+        <div class="items" id="items">
+            {{ range $k, $v := . }}
+            <a class="item" href="/release?id={{.Id}}">
+                <img src="{{ $v.Thumbnail }}" alt="thumsml">
+                <span class="tlwrd">{{ $v.Title }}</span>
+                <span class="ctwrd">{{ $v.Category }}</span>
+                <p>{{ $v.Synopsis}}</p>
+                <span class="dtwrd">{{ $v.HumanDate }}</span>
+            </a>
+            {{ end }}
+        </div>
+
+        <div id="loader" class="hd">
+            <div class="spins">
+                <img class="spin" src="/public/settings.svg" alt="spinner">
+            </div>
+        </div>
+    </div>
+
+    <div class="ftdiv">
+        <span>&copy;Denoms Studios</span>
+        <a href="/terms&conditions">
+            Terms & conditions
+        </a>
+        <a href="/privacy">
+            Privacy
+        </a>
+    </div>
+</body>
+<script src="/public/main.js"></script>
+</html>

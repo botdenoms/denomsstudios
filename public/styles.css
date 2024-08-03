@@ -287,7 +287,173 @@ video{
     color: #fff;
 }
 
+.active{
+    color: #808080 !important;
+}
+
+.icon{
+    height: 24px;
+    width: 24px;
+    cursor: pointer;
+}
+
+.icon img{
+    width: 100%;
+    height: 100%;
+}
+
+input{
+    background: #ffffff88;
+    padding: 8px;
+    border-radius: 5px;
+    border: none;
+    color: #fff;
+}
+
+#loader{
+    height: 50vh;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+@keyframes spinner {
+    0%{
+        transform: rotateZ(0deg);
+    }
+    100%{
+        transform: rotateZ(360deg);
+    }
+}
+
+.spins{
+    transform-origin: bottom;
+    animation: spinner 800ms ease-in-out infinite;
+}
+
+.spin{
+    height: 24px;
+    width: 24px;
+}
+
+button{
+    padding: 8px 16px;
+    background: #fff;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+}
+
+.tbtn{
+    background: none;
+    color: #fff;
+    font-size: 17px;
+}
+
+.fbtn{
+    margin: 0 20px;
+}
+
+input:focus{
+    border: none;
+    outline: none;
+}
+
+.srcbar{
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    margin: 10px 0;
+}
+
+.srcbar div{
+    display: flex;
+    align-items: center;
+    margin: 0 10px;
+}
+
+.items{
+    display: flex;
+    width: 100%;
+    flex-wrap: wrap;
+}
+
+.item{
+    position: relative;
+    height: 300px;
+    max-width: 400px;
+    padding: 40px 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: flex-start;
+    background: #1c1c1c;
+    margin: 5px;
+}
+
+.item .dtwrd{
+    margin-top: 20px;
+}
+
+.item img{
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 100%;
+    width: 80%;
+}
+
+.advnc{
+    height: 40px;
+    width: 100%;
+    background: #606060;
+}
+
+.mbl{
+    display: none;
+}
+
+.lgr{
+    display: block;
+}
+
+.hd{
+    display: none !important;
+}
+
 @media screen and (max-width: 600px) {
+    .lgr{
+        display: none;
+    }
+
+    .srcbar{
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+    }
+
+    .mbl{
+        display: block;
+        margin-top: 4px !important;
+    }
+
+    .hd{
+        display: none !important;
+    }
+
+    .item{
+        width: 100%;
+        margin: 5px 0;
+    }
+
+    .items{
+        display: flex;
+        flex-direction: column;
+        padding: 10px;
+        width: 100%;
+    }
+
     .sml{
         display: flex;
         padding: 5px 10px;
