@@ -410,6 +410,30 @@ input:focus{
     background: #606060;
 }
 
+.notice{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    min-height: calc(.65* 100vh);
+}
+
+.notice div{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 80px;
+    background: #1c1c1c;
+    border-radius: 5px;
+    box-shadow: 0 0 8px 1px rgba(255, 255, 255, 0.253);
+}
+
+.notice span{
+    color: #fff;
+    font-size: 14px;
+}
+
 .mbl{
     display: none;
 }

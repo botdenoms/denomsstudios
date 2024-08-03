@@ -37,6 +37,12 @@ async function search() {
     var resp = await fetch(`http://localhost:5000/releases?s=${words}`)
     const finds = await resp.json()
 
+    if (finds.length === 0) {
+        noItems(itms)
+        ldr.className = 'hd'
+        return
+    }
+
     for (let index = 0; index < finds.length; index++) {
         var p = document.createElement('a')
         p.setAttribute('class', "item")
@@ -85,6 +91,12 @@ async function newRequest() {
     var resp = await fetch(`http://localhost:5000/releases?n=${true}`)
     const finds = await resp.json()
 
+    if (finds.length === 0) {
+        noItems(itms)
+        ldr.className = 'hd'
+        return
+    }
+
     for (let index = 0; index < finds.length; index++) {
         var p = document.createElement('a')
         p.setAttribute('class', "item")
@@ -132,6 +144,12 @@ async function futureRequest() {
 
     var resp = await fetch(`http://localhost:5000/releases?f=${true}`)
     const finds = await resp.json()
+
+    if (finds.length === 0) {
+        noItems(itms)
+        ldr.className = 'hd'
+        return
+    }
 
     for (let index = 0; index < finds.length; index++) {
         var p = document.createElement('a')
@@ -182,6 +200,12 @@ async function oldRequest() {
     var resp = await fetch(`http://localhost:5000/releases?e=${true}`)
     const finds = await resp.json()
 
+    if (finds.length === 0) {
+        noItems(itms)
+        ldr.className = 'hd'
+        return
+    }
+
     for (let index = 0; index < finds.length; index++) {
         var p = document.createElement('a')
         p.setAttribute('class', "item")
@@ -214,4 +238,18 @@ async function oldRequest() {
 
 function initJs() {
     console.log("init")
+}
+
+function noItems(parent) {
+    var p = document.createElement('div')
+    p.setAttribute('class', "notice")
+    var div = document.createElement('div')
+    var s1 = document.createElement('span')
+    s1.innerText = 'No Releases found at this time!'
+    var s2 = document.createElement('span')
+    s2.innerText = 'Try again later'
+    div.appendChild(s1)
+    div.appendChild(s2)
+    p.appendChild(div)
+    parent.appendChild(p)
 }

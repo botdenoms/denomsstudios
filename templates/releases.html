@@ -99,6 +99,15 @@
         <div class="advnc lgr hd"></div>
 
         <div class="items" id="items">
+            {{ $lng := len .}}
+            {{ if eq $lng 0}}
+            <div class="notice">
+                <div>
+                    <span> No Releases found at this time!</span>
+                    <span>Try again later</span>
+                </div>
+            </div>
+            {{ else }}
             {{ range $k, $v := . }}
             <a class="item" href="/release?id={{.Id}}">
                 <img src="{{ $v.Thumbnail }}" alt="thumsml">
@@ -107,6 +116,7 @@
                 <p>{{ $v.Synopsis}}</p>
                 <span class="dtwrd">{{ $v.HumanDate }}</span>
             </a>
+            {{ end }}
             {{ end }}
         </div>
 
