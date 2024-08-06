@@ -446,9 +446,112 @@ input:focus{
     display: none !important;
 }
 
+.timeline{
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.block{
+    width: 100%;
+    margin: 1px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.struct{
+    position: relative;
+    width: 10px;
+    height: 240px;
+}
+
+.point{
+    position: absolute;
+    display: flex;
+}
+
+.rv{
+    flex-direction: row-reverse;
+}
+
+.data{
+    padding: 0 4px;
+    display: flex;
+    flex-direction: column;
+    width: max-content;
+}
+
+.show{
+    display: flex;
+    align-items: center;
+}
+
+.day{
+    font-size: 24px;
+    color: #fff;
+    font-weight: bold;
+}
+
+.col{
+    display: flex;
+    flex-direction: column;
+    padding-left: 2px;
+}
+
+.col span{
+    font-size: 10px;
+    color: #fff;
+}
+
+.line{
+    width: 100px;
+    height: 5px;
+}
+
+.more{
+    display: none;
+}
+
+.more span{
+    font-size: 10px;
+    font-weight: bold;
+    color: #fff;
+}
+
+.ct{
+    font-size: 10px;
+    font-weight: normal;
+    color: #808080 !important;
+}
+
+.navlnk{
+    font-size: 14px;
+    margin: 4px;
+    padding: 0 8px;
+}
+
+.data:hover{
+    background: #1c1c1c;
+    z-index: 1;
+}
+
+.data:hover .more{
+    transition: 1000ms;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
 @media screen and (max-width: 600px) {
     .lgr{
         display: none;
+    }
+
+    .line{
+        width: 50px;
     }
 
     .srcbar{
