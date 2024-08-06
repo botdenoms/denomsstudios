@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"html/template"
+	"math/rand"
 	"net/http"
 	"strconv"
 	"strings"
@@ -127,9 +128,22 @@ func HandleTemplateRequest(writer http.ResponseWriter, request *http.Request) {
 	case "/timeline":
 		path = "timeline.html"
 		// get data required for the view
-		data = curRepo.AllTimeline()
-		// default:
-		// 	http.NotFoundHandler()
+		dt := curRepo.AllTimeline()
+		tmp := map[int][]interface{}{}
+		ftmp := map[int][]interface{}{}
+		for _, v := range dt {
+			if len(tmp[v.Date.Year()])%2 == 0 {
+				v.Left = true
+			} else {
+				v.Left = false
+			}
+			tmp[v.Date.Year()] = append(tmp[v.Date.Year()], v)
+		}
+		for _, v := range tmp {
+			col := rand.Intn(999999)
+			ftmp[col] = append(ftmp[col], v...)
+		}
+		data = ftmp
 	}
 
 	t := htmlTemplates.Lookup(path)

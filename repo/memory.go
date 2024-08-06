@@ -3,6 +3,7 @@ package repo
 import (
 	"denomsstudios/model"
 	"math/rand"
+	"sort"
 )
 
 type MemoryRepo struct {
@@ -20,7 +21,7 @@ func (r MemoryRepo) RandomRelease() model.Release {
 }
 
 func (r MemoryRepo) CreateRelease(items model.Release) (string, bool) {
-	r.Releases = append(r.Releases, items)
+	// r.Releases = append(r.Releases, items)
 	return "", true
 }
 
@@ -29,7 +30,23 @@ func (r MemoryRepo) AllRelease() []model.Release {
 }
 
 func (r MemoryRepo) AllTimeline() []model.Timeline {
-	return r.Timeline
+	t := r.Timeline
+	var its []int
+	var fl []model.Timeline
+	for _, v := range t {
+		v.Index = v.Date.YearDay()
+		its = append(its, v.Index)
+	}
+	sort.Ints(its)
+	for _, dy := range its {
+		for _, tl := range t {
+			if dy == tl.Date.YearDay() {
+				fl = append(fl, tl)
+				break
+			}
+		}
+	}
+	return fl
 }
 
 func (r MemoryRepo) ReleaseById(id string) (model.Release, bool) {
