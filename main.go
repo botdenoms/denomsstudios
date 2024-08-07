@@ -144,6 +144,22 @@ func HandleTemplateRequest(writer http.ResponseWriter, request *http.Request) {
 			ftmp[col] = append(ftmp[col], v...)
 		}
 		data = ftmp
+	case "/about":
+		path = "about.html"
+		// get data required for the view
+		data = nil
+	case "/contacts":
+		path = "contacts.html"
+		// get data required for the view
+		data = nil
+	case "/privacy":
+		path = "privacy.html"
+		// get data required for the view
+		data = nil
+	case "/terms&conditions":
+		path = "terms&conditions.html"
+		// get data required for the view
+		data = nil
 	}
 
 	t := htmlTemplates.Lookup(path)
