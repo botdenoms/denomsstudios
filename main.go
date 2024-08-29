@@ -160,6 +160,29 @@ func HandleTemplateRequest(writer http.ResponseWriter, request *http.Request) {
 		path = "terms&conditions.html"
 		// get data required for the view
 		data = nil
+	case "/admin/login":
+		if request.Method == http.MethodPost {
+			user := request.PostFormValue("email")
+			pass := request.PostFormValue("pass")
+			fmt.Printf("user: %v\t pass: %v\n", user, pass)
+			if user == "admin@ds.st" {
+				http.SetCookie(writer, &http.Cookie{Name: "auth", Expires: time.Now().Add(time.Minute)})
+				http.Redirect(writer, request, "/admin/dashboard", http.StatusTemporaryRedirect)
+				return
+			} else {
+				data = model.Response{
+					Status:  true,
+					Message: "Invalid credentials",
+					Title:   "Not authorized",
+				}
+			}
+		} else {
+			data = nil
+		}
+		path = "auth.html"
+	case "/admin/dashboard":
+		path = "dashboard.html"
+		data = nil
 	}
 
 	t := htmlTemplates.Lookup(path)
