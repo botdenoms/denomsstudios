@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Denoms Studios | Admin </title>
+    <link rel="icon" type="image/svg+xml" href="/public/favicon.svg" />
+    <link rel="stylesheet" href="/public/styles.css">
+    <script src="/public/main.js"></script>
+</head>
+<body>
+    <div class="ctr">
+        <form action="/admin/login" method="post">
+            <div class="spr20"></div>
+            <div class="row">
+                <div class="lgbig">
+                    <img src="/public/favicon.svg" alt="logo" >
+                </div>
+            </div>
+            <div class="spr20"></div>
+            {{ if eq .Status true}}
+            <div class="err">
+                <span>{{ .Title }}</span>
+                <span>{{ .Message }}</span>
+                <div class="spr20"></div>
+            </div>
+            {{ end }}
+            <div class="col">
+                <label for="email">Email | username </label>
+                <input type="email" name="email" id="email" required>
+            </div>
+            <div class="spr20"></div>
+            <div class="col">
+                <label for="pass">Password</label>
+                <input type="password" name="pass" id="pass" required>
+            </div>
+            <div class="spr40"></div>
+            <div class="row">
+                <button type="submit">Login</button>
+            </div>
+            <div class="spr40"></div>
+        </form>
+        <div class="spr40"></div>
+    </div>
+</body>
+</html>

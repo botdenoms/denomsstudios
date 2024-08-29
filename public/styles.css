@@ -71,6 +71,12 @@ select{
     margin-bottom: 5px;
 }
 
+.lgbig{
+    height: 96px;
+    width: 96px;
+    margin-bottom: 5px;
+}
+
 img{
     width: 100%;
     height: 100%;
@@ -235,6 +241,46 @@ video{
 
 .content .ctwrd{
     color: #606060;
+}
+
+.ctr{
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.err{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 10px;
+}
+
+.err span{
+    color: #cc0000;
+    font-size: 14px;
+}
+
+.spr20{
+    height: 20px;
+}
+
+.spr40{
+    height: 40px;
+}
+
+label{
+    color: #fff;
+    font-size: 14px;
+}
+
+.row{
+    display: flex;
+    justify-content: center;
 }
 
 .ctrdiv{
