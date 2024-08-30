@@ -166,7 +166,7 @@ func HandleTemplateRequest(writer http.ResponseWriter, request *http.Request) {
 			pass := request.PostFormValue("pass")
 			fmt.Printf("user: %v\t pass: %v\n", user, pass)
 			if user == "admin@ds.st" {
-				http.SetCookie(writer, &http.Cookie{Name: "auth", Expires: time.Now().Add(time.Minute)})
+				http.SetCookie(writer, &http.Cookie{Name: "auth", Expires: time.Now().Add(time.Minute * 4)})
 				http.Redirect(writer, request, "/admin/dashboard", http.StatusTemporaryRedirect)
 				return
 			} else {
@@ -181,6 +181,15 @@ func HandleTemplateRequest(writer http.ResponseWriter, request *http.Request) {
 		}
 		path = "auth.html"
 	case "/admin/dashboard":
+		c, r := request.Cookie("auth")
+		if r != nil {
+			http.Redirect(writer, request, "/admin/login", http.StatusTemporaryRedirect)
+			return
+		}
+		if c.Expires.After(time.Now()) {
+			http.Redirect(writer, request, "/admin/login", http.StatusTemporaryRedirect)
+			return
+		}
 		path = "dashboard.html"
 		data = nil
 	}
