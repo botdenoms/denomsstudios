@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Denoms Studios | Dashboard </title>
+    <link rel="icon" type="image/svg+xml" href="/public/favicon.svg" />
+    <link rel="stylesheet" href="/public/styles.css">
+    <link rel="stylesheet" href="/public/workspc.css">
+    <script src="/public/main.js"></script>
+</head>
+<body>
+    <div class="appbar">
+        <div class="lrg">
+            <div class="lfbr">
+                <a href="/">
+                    <div class="logo">
+                        <img src="/public/favicon.svg" alt="logo">
+                    </div>
+                </a>
+            </div>
+            <div class="rgbr">
+                <select>
+                    <option value="1">Eng</option>
+                </select>
+            </div>
+        </div>
+        <div class="sml">
+            <div class="tpbr">
+                <a href="/">
+                    <div class="logo">
+                        <img src="/public/favicon.svg" alt="logo">
+                    </div>
+                </a>
+                <select>
+                    <option value="1">Eng</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="tabs" id="tabs">
+        <div class="tb active" onclick="switchTab(0)">Dashboard</div>
+        <div class="tb" onclick="switchTab(1)">Timeline</div>
+        <div class="tb" onclick="switchTab(2)">Releases</div>
+        <div class="tb" onclick="switchTab(3)">Statistics</div>
+    </div>
+
+    <div class="workspc">
+        <div class="dshbrd">
+            <div class="current">
+                <img src="/public/thum.png" alt="thumb">
+                <div class="dts">
+                    <span>Last release</span>
+                    <div>
+                        <span class="ctwrd">Satire</span>
+                        <span class="tlwrd">Loops of Life</span>
+                    </div>
+                </div>
+            </div>
+            <div class="stats">
+                <div class="figs">
+                    <div class="col1">
+                        <span class="bld">00</span>
+                        <span>Releases</span>
+                    </div>
+                    <div class="col1">
+                        <span class="bld">00</span>
+                        <span>Views</span>
+                    </div>
+                    <div class="col1">
+                        <span class="bld">00</span>
+                        <span>Pending releases</span>
+                    </div>
+                </div>
+                <div class="shrt">
+                    <div class="nxt">
+                        <span>Next Releases</span>
+                        <span class="ctwrd">Comedy</span>
+                        <span class="tlwrd">Lots ohf looting</span>
+                    </div>
+                    <div class="acts">
+                        <button class="btnb">Update Timeline</button>
+                        <button class="btnb">Publish Release</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/public/admin.js"></script>
+</body>
+</html>

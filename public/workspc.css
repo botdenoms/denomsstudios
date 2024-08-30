@@ -1,0 +1,109 @@
+.workspc{
+    padding: 10px;
+}
+
+.dshbrd{
+    width: 100%;
+    display: flex;
+    padding: 40px;
+}
+
+.current{
+    position: relative;
+    height: 350px;
+    width: calc(.4 * 100vw);
+    background: #ccc;
+}
+
+.dts{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.dts div{
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 40px;
+}
+
+.stats{
+    display: flex;
+    flex-direction: column;
+    margin: 0 20px;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.figs{
+    padding: 10px;
+    background: #0058ff37;
+    display: flex;
+    justify-content: space-evenly;
+    min-height: 150px;
+}
+
+.col1{
+    display: flex;
+    flex-direction: column;
+    padding-left: 2px;
+}
+
+.col1 span{
+    font-size: 18px;
+    color: #fff;
+}
+
+.bld{
+    font-weight: bold;
+    font-weight: 20px;
+}
+
+.shrt{
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+}
+
+.nxt{
+    display: flex;
+    flex-direction: column;
+    border-bottom: 2px solid #0357ffff;
+    cursor: pointer;
+    width: 50%;
+}
+
+.acts{
+    background: #0058ff37;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    padding: 10px;
+    height: 100%;
+}
+.acts button{
+    margin: 4px;
+}
+
+.btnb{
+    padding: 8px 16px;
+    background: #0357ffff;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    color: #fff;
+}
+
+.btnr{
+    padding: 8px 16px;
+    background: #cc0000;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+}
