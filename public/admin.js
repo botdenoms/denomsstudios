@@ -10,3 +10,12 @@ function switchTab(index) {
     tabsP.children.item(index).className += " active"
 }
 
+function timelineForm(){
+    var form = document.getElementById("tlform")
+    var btn = document.getElementById("tlformbt")
+    
+    if (form.className.includes("hd")) {
+        form.className = ""
+        btn.className += " hd"
+    }
+}

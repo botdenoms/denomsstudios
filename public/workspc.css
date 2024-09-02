@@ -8,6 +8,88 @@
     padding: 40px;
 }
 
+.tlbrd{
+    height: 100%;
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    column-gap: 10px;
+    padding: 0 10px;
+}
+
+.formnew{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.lstview{
+    margin: 10px 0;
+}
+
+.lstview span{
+    color: #fff;
+}
+
+.itemtl{
+    padding: 10px;
+    background: #ffffff88;
+    border-left: solid 4px #00f;
+    display: flex;
+    flex-direction: column;
+    margin: 2px;
+    cursor: pointer;
+}
+
+.selected{
+    background: #0357ffff;
+}
+
+.fmselect{
+    background: #ffffff88;
+    padding: 8px;
+    border-radius: 5px;
+    border: none;
+    color: #fff;
+    margin: 0;
+}
+
+.row1{
+    display: flex;
+    justify-content: space-between;
+}
+
+.spr10{
+    height: 10px;
+}
+
+.props{
+    min-width: calc(.2 * 100vw);
+    padding: 10px;
+    background: #0058ff37;
+    display: flex;
+    flex-direction: column;
+}
+
+.hdr{
+    margin: 10px 0;
+    display: flex;
+    justify-content: space-between;
+}
+
+.hdr div{
+    display: flex;
+    flex-direction: column;
+}
+
+.propsi{
+    margin: 10px 0;
+}
+
+.propsb{
+    margin: 20px 0;
+}
+
 .current{
     position: relative;
     height: 350px;
@@ -49,10 +131,38 @@
     min-height: 150px;
 }
 
+.dy{
+    font-size: 28px;
+    font-weight: bold;
+}
+
 .col1{
     display: flex;
     flex-direction: column;
     padding-left: 2px;
+}
+
+.tlwrd1{
+    margin-top: 10px;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.ctword1{
+    font-size: 14px;
+    color: #404040;
+}
+
+.col2{
+    font-size: 14px;
+    display: flex;
+    flex-direction: column;
+    margin-left: 5px;
+}
+
+.row2{
+    display: flex;
+    align-items: flex-end;
 }
 
 .col1 span{
@@ -106,4 +216,5 @@
     border-radius: 5px;
     border: none;
     cursor: pointer;
+    color: #fff;
 }

@@ -48,7 +48,7 @@
     </div>
 
     <div class="workspc">
-        <div class="dshbrd">
+        <div class="dshbrd hd">
             <div class="current">
                 <img src="/public/thum.png" alt="thumb">
                 <div class="dts">
@@ -87,6 +87,84 @@
                 </div>
             </div>
         </div>
+
+        <div class="tlbrd">
+
+            <div class="formnew">
+
+                <div>
+                    <button class="btnb" onclick="timelineForm()" id="tlformbt">Add Timeline</button>
+                    <form action="/" method="post" id="tlform" class="hd">
+                        <div class="col">
+                            <label for="title">Title </label>
+                            <input type="text" name="title" id="title" required>
+                        </div>
+                        <div class="spr10"></div>
+                        <div class="col">
+                            <label for="category">Category </label>
+                            <select name="category" id="category" class="fmselect">
+                                <option value="0">TBD</option>
+                                <option value="1">Thriller</option>
+                                <option value="2">Comedy</option>
+                            </select>
+                        </div>
+                        <div class="spr10"></div>
+                        <div class="col">
+                            <label for="date">Date </label>
+                            <input type="date" name="date" id="date" required>
+                        </div>
+                        <div class="spr20"></div>
+                        <div class="row1">
+                            <button class="btnr">Cancel</button>
+                            <button class="btnb">Add</button>
+                        </div>
+                    </form>
+                </div>
+                
+                <div class="lstview">
+                    <span>Current timeline</span>
+                    <div class="items">
+                        <div class="itemtl">
+                            <div class="row2">
+                                <span class="dy">00</span>
+                                <div class="col2">
+                                    <span>Jun</span>
+                                    <span>2024</span>
+                                </div>
+                            </div>
+                            <span class="tlwrd1">Title</span>
+                            <span class="ctword1">Category</span>
+                            <div class="spr20"></div>
+                            <a href="/release?id=125" class="navlnk">Release Notes</a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="props">
+                <div class="hdr">
+                    <div>
+                        <span class="tlwrd">Title</span>
+                        <span class="ctwrd">Category</span>
+                    </div>
+                    <div class="icon">
+                        <img src="/public/close.svg" alt="close">
+                    </div>
+                </div>
+                <div class="propsi">
+                    <div class="col1">
+                        <span>Release Date</span>
+                        <span>07 Jun 2024</span>
+                    </div>
+                </div>
+                <div class="propsb">
+                    <button class="btnb">Edit</button>
+                </div>
+            </div>
+
+        </div>
+
     </div>
 
     <script src="/public/admin.js"></script>
