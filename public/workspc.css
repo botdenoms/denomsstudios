@@ -66,6 +66,13 @@
 }
 
 .selected{
+    padding: 10px;
+    background: #ffffff88;
+    border-left: solid 4px #00f;
+    display: flex;
+    flex-direction: column;
+    margin: 2px;
+    cursor: pointer;
     background: #0357ffff;
 }
 
