@@ -49,7 +49,7 @@
 
     <div class="workspc">
         <div id="dshb" class="dshbrd">
-            <div class="current">
+            <a class="current" href="/release?id={{ .Prev.Id }}">
                 <img src="{{ .Prev.Thumbnail }}" alt="thumb">
                 <div class="dts">
                     <span>Last release</span>
@@ -58,7 +58,7 @@
                         <span class="tlwrd">{{ .Prev.Title }}</span>
                     </div>
                 </div>
-            </div>
+            </a>
             <div class="stats">
                 <div class="figs">
                     <div class="col1">
@@ -75,14 +75,14 @@
                     </div>
                 </div>
                 <div class="shrt">
-                    <div class="nxt">
+                    <div class="nxt" onclick="nextRelease(2, {{ .Next.Id }})">
                         <span>Next Releases</span>
                         <span class="ctwrd">{{ .Next.Category}}</span>
                         <span class="tlwrd">{{ .Next.Title }}</span>
                     </div>
                     <div class="acts">
-                        <button class="btnb">Update Timeline</button>
-                        <button class="btnb">Publish Release</button>
+                        <button class="btnb" onclick="switchTab(1)">Update Timeline</button>
+                        <button class="btnb" onclick="switchTab(2)">Publish Release</button>
                     </div>
                 </div>
             </div>

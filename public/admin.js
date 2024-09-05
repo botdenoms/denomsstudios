@@ -110,3 +110,8 @@ function timelineSelect(id, ref=false){
     cl.item(0).children.item(1).innerHTML = date
     props.className = "props"
 }
+
+function nextRelease(index, id) {
+    switchTab(index)
+    timelineSelect(id, true)
+}
