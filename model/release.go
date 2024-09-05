@@ -34,3 +34,16 @@ func (r Release) ToJson() map[string]interface{} {
 
 	return mp
 }
+
+func (r Release) Day() string {
+	d := strconv.Itoa(r.Date.Day())
+	if len(d) < 2 {
+		return "0" + d
+	} else {
+		return strconv.Itoa(r.Date.Day())
+	}
+}
+
+func (r Release) Month() string {
+	return r.Date.Month().String()[:3]
+}

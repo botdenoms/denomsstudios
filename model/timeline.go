@@ -30,3 +30,10 @@ func (t Timeline) Pos() string {
 	dy := float32(t.Date.YearDay()) / float32(366+31) * 100
 	return strconv.Itoa(int(math.Ceil(float64(dy))))
 }
+
+func (t Timeline) HumanDate() string {
+	yrs := t.Date.Year()
+	dy := t.Date.Day()
+	mnt := t.Date.Month().String()[:3]
+	return strconv.Itoa(dy) + " " + mnt + " " + strconv.Itoa(yrs)
+}

@@ -50,19 +50,19 @@
     <div class="workspc">
         <div id="dshb" class="dshbrd">
             <div class="current">
-                <img src="/public/thum.png" alt="thumb">
+                <img src="{{ .Prev.Thumbnail }}" alt="thumb">
                 <div class="dts">
                     <span>Last release</span>
                     <div>
-                        <span class="ctwrd">Satire</span>
-                        <span class="tlwrd">Loops of Life</span>
+                        <span class="ctwrd">{{ .Prev.Category }}</span>
+                        <span class="tlwrd">{{ .Prev.Title }}</span>
                     </div>
                 </div>
             </div>
             <div class="stats">
                 <div class="figs">
                     <div class="col1">
-                        <span class="bld">00</span>
+                        <span class="bld"> {{ .Rcount }}</span>
                         <span>Releases</span>
                     </div>
                     <div class="col1">
@@ -70,15 +70,15 @@
                         <span>Views</span>
                     </div>
                     <div class="col1">
-                        <span class="bld">00</span>
+                        <span class="bld">{{ .Pcount }}</span>
                         <span>Pending releases</span>
                     </div>
                 </div>
                 <div class="shrt">
                     <div class="nxt">
                         <span>Next Releases</span>
-                        <span class="ctwrd">Comedy</span>
-                        <span class="tlwrd">Lots ohf looting</span>
+                        <span class="ctwrd">{{ .Next.Category}}</span>
+                        <span class="tlwrd">{{ .Next.Title }}</span>
                     </div>
                     <div class="acts">
                         <button class="btnb">Update Timeline</button>
@@ -126,32 +126,27 @@
                 <div class="lstview">
                     <span>Current timeline</span>
                     <div class="items">
-                        <div class="itemtl" onclick="timelineSelect('1')" data-id="1" data-title="woes we he" data-category="Thriller" data-date="07-02-2024">
+                        {{ range $k, $v := .Timeline }}
+                        <div class="itemtl" onclick="timelineSelect('{{ $v.Id }}')" 
+                        data-id="{{ $v.Id }}" 
+                        data-title="{{ $v.Title }}" 
+                        data-category="{{ $v.Category }}" 
+                        data-date="{{ $v.HumanDate }}">
                             <div class="row2">
-                                <span class="dy">00</span>
+                                <span class="dy">{{ $v.Day }}</span>
                                 <div class="col2">
-                                    <span>Jun</span>
-                                    <span>2024</span>
+                                    <span>{{ $v.Month }}</span>
+                                    <span>{{ $v.Date.Year }}</span>
                                 </div>
                             </div>
-                            <span class="tlwrd1">woes we he</span>
-                            <span class="ctword1">Thriller</span>
+                            <span class="tlwrd1">{{ $v.Title }}</span>
+                            <span class="ctword1">{{ $v.Category }}</span>
                             <div class="spr20"></div>
-                            <a href="/release?id=125" class="navlnk">Release Notes</a>
+                            {{ if ne $v.Ref ""}}
+                            <a href="/release?id={{ $v.Ref }}" class="navlnk">Release Notes</a>
+                            {{ end }}
                         </div>
-                        <div class="itemtl" onclick="timelineSelect('2')" data-id="2" data-title="wonder loss" data-category="Comedy" data-date="07-12-2024">
-                            <div class="row2">
-                                <span class="dy">00</span>
-                                <div class="col2">
-                                    <span>Jun</span>
-                                    <span>2024</span>
-                                </div>
-                            </div>
-                            <span class="tlwrd1">wonder loss</span>
-                            <span class="ctword1">Comedy</span>
-                            <div class="spr20"></div>
-                            <a href="/release?id=125" class="navlnk">Release Notes</a>
-                        </div>
+                        {{ end }}
                     </div>
                 </div>
 
@@ -186,38 +181,45 @@
                 <div class="lstview">
                     <span>On timeline</span>
                     <div class="items">
-                        <div class="itemtl" onclick="timelineSelect('1', true)" data-id="1" data-title="woes we he" data-category="Thriller" data-date="07-02-2024">
+                        {{ range $k, $v := .Pending }}
+                        <div class="itemtl" onclick="timelineSelect('{{ $v.Id }}', true)" 
+                        data-id="{{ $v.Id }}" 
+                        data-title="{{ $v.Title }}" 
+                        data-category="{{ $v.Category }}" 
+                        data-date="{{ $v.HumanDate }}">
                             <div class="row2">
-                                <span class="dy">00</span>
+                                <span class="dy">{{ $v.Day }}</span>
                                 <div class="col2">
-                                    <span>Jun</span>
-                                    <span>2024</span>
+                                    <span>{{ $v.Month }}</span>
+                                    <span>{{ $v.Date.Year }}</span>
                                 </div>
                             </div>
-                            <span class="tlwrd1">woes we he</span>
-                            <span class="ctword1">Thriller</span>
+                            <span class="tlwrd1">{{ $v.Title }}</span>
+                            <span class="ctword1">{{ $v.Category }}</span>
                             <div class="spr20"></div>
-                            <a href="/release?id=125" class="navlnk">Release Notes</a>
                         </div>
+                        {{ end }}
                     </div>
                 </div>
 
                 <div class="lstview">
                     <span>Releases</span>
                     <div class="items">
-                        <div class="itemtl">
+                        {{ range $k, $v := .Releases }}
+                        <div class="itemtl" >
                             <div class="row2">
-                                <span class="dy">00</span>
+                                <span class="dy">{{ $v.Day }}</span>
                                 <div class="col2">
-                                    <span>Jun</span>
-                                    <span>2024</span>
+                                    <span>{{ $v.Month }}</span>
+                                    <span>{{ $v.Date.Year }}</span>
                                 </div>
                             </div>
-                            <span class="tlwrd1">Title</span>
-                            <span class="ctword1">Category</span>
+                            <span class="tlwrd1">{{ $v.Title }}</span>
+                            <span class="ctword1">{{ $v.Category }}</span>
                             <div class="spr20"></div>
-                            <a href="/release?id=125" class="navlnk">Release Notes</a>
+                            <a href="/release?id={{ $v.Id }}" class="navlnk">Release Notes</a>
                         </div>
+                        {{ end }}
                     </div>
                 </div>
             </div>
