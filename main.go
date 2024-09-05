@@ -191,7 +191,19 @@ func HandleTemplateRequest(writer http.ResponseWriter, request *http.Request) {
 			return
 		}
 		path = "dashboard.html"
-		data = nil
+
+		ftmp := map[string]interface{}{}
+		tl := curRepo.AllTimeline()
+		rl := curRepo.AllReleaseSorted()
+		pn := curRepo.PendingTimeline()
+		ftmp["Releases"] = rl
+		ftmp["Timeline"] = tl
+		ftmp["Pending"] = pn
+		ftmp["Prev"] = rl[len(rl)-1]
+		ftmp["Next"] = pn[0]
+		ftmp["Pcount"] = len(pn)
+		ftmp["Rcount"] = len(rl)
+		data = ftmp
 	}
 
 	t := htmlTemplates.Lookup(path)

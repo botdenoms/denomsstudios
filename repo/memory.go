@@ -4,6 +4,7 @@ import (
 	"denomsstudios/model"
 	"math/rand"
 	"sort"
+	"time"
 )
 
 type MemoryRepo struct {
@@ -27,6 +28,26 @@ func (r MemoryRepo) CreateRelease(items model.Release) (string, bool) {
 
 func (r MemoryRepo) AllRelease() []model.Release {
 	return r.Releases
+}
+
+func (r MemoryRepo) AllReleaseSorted() []model.Release {
+	t := r.Releases
+	var its []int
+	var fl []model.Release
+	for _, v := range t {
+		dy := v.Date.YearDay()
+		its = append(its, dy)
+	}
+	sort.Ints(its)
+	for _, dy := range its {
+		for _, tl := range t {
+			if dy == tl.Date.YearDay() {
+				fl = append(fl, tl)
+				break
+			}
+		}
+	}
+	return fl
 }
 
 func (r MemoryRepo) AllTimeline() []model.Timeline {
@@ -56,4 +77,29 @@ func (r MemoryRepo) ReleaseById(id string) (model.Release, bool) {
 		}
 	}
 	return model.Release{}, true
+}
+
+func (r MemoryRepo) PendingTimeline() []model.Timeline {
+	t := r.Timeline
+	var its []int
+	var fl, fln []model.Timeline
+	for _, v := range t {
+		v.Index = v.Date.YearDay()
+		its = append(its, v.Index)
+	}
+	sort.Ints(its)
+	for _, dy := range its {
+		for _, tl := range t {
+			if dy == tl.Date.YearDay() {
+				fl = append(fl, tl)
+				break
+			}
+		}
+	}
+	for _, f := range fl {
+		if f.Date.After(time.Now()) {
+			fln = append(fln, f)
+		}
+	}
+	return fln
 }

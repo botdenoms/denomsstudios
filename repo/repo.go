@@ -14,4 +14,8 @@ type Repository interface {
 	AllTimeline() []model.Timeline
 
 	ReleaseById(id string) (model.Release, bool)
+
+	AllReleaseSorted() []model.Release
+
+	PendingTimeline() []model.Timeline
 }
