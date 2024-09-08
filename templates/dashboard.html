@@ -131,7 +131,8 @@
                         data-id="{{ $v.Id }}" 
                         data-title="{{ $v.Title }}" 
                         data-category="{{ $v.Category }}" 
-                        data-date="{{ $v.HumanDate }}">
+                        data-date="{{ $v.HumanDate }}"
+                        data-ref="{{ $v.Ref }}">
                             <div class="row2">
                                 <span class="dy">{{ $v.Day }}</span>
                                 <div class="col2">
@@ -156,20 +157,41 @@
                 <div class="hdr">
                     <div>
                         <span class="tlwrd">Title</span>
+                        <input class="hd nttl" type="text" name="ntitle" id="ntitle" required>
                         <span class="ctgwht">Category</span>
+                        <select class="hd ncat" name="ncategory" id="ncategory" value="0">
+                            <option value="0">TBD</option>
+                            <option value="1">Comedy</option>
+                            <option value="2">Thriller</option>
+                            <option value="3">Animation</option>
+                        </select>
                     </div>
                     <div class="icon" onclick="propToggle(0)">
                         <img src="/public/close.svg" alt="close">
                     </div>
                 </div>
                 <div class="propsi">
+                    <input class="hd ndt" type="date" name="ndate" id="ndate" required>
                     <div class="col1">
                         <span class="smld">Release Date</span>
                         <span>07 Jun 2024</span>
                     </div>
                 </div>
-                <div class="propsb">
-                    <button class="btnb">Edit</button>
+                <div class="propsb" id="propsb">
+                    <button class="btnb edit hd" onclick="editTimeline()">Edit</button>
+                    <button class="btnr del hd" onclick="delTimeline()">Delete</button>
+                    <button class="btnb pkb hd" onclick="peekShow()" id="pkb">Peek</button>
+                    <a class="btnb rels hd" href="#" >Release</a>
+                    <div class="row1 hd">
+                        <button class="btnb" >Update</button>
+                        <button class="btnr" onclick="closeEdit()">Cancel</button>
+                    </div>
+                </div>
+                <div class="peek hd" id="peek">
+                    <div class="pkimg">
+                        <img src="/public/thum.png" alt="peek" id="peekimg">
+                    </div>
+                    <p id="synp">synopsis...</p>
                 </div>
             </div>
 
@@ -186,7 +208,8 @@
                         data-id="{{ $v.Id }}" 
                         data-title="{{ $v.Title }}" 
                         data-category="{{ $v.Category }}" 
-                        data-date="{{ $v.HumanDate }}">
+                        data-date="{{ $v.HumanDate }}"
+                        data-ref="{{ $v.Ref }}">
                             <div class="row2">
                                 <span class="dy">{{ $v.Day }}</span>
                                 <div class="col2">
