@@ -348,8 +348,8 @@ label{
     height: 100%;
 }
 
-input{
-    background: #ffffff88;
+input, textarea{
+    background: #00000088;
     padding: 8px;
     border-radius: 5px;
     border: none;

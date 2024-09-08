@@ -204,7 +204,7 @@
                     <span>On timeline</span>
                     <div class="items">
                         {{ range $k, $v := .Pending }}
-                        <div class="itemtl" onclick="timelineSelect('{{ $v.Id }}', true)" 
+                        <div class="itemrl" onclick="timelineSelect('{{ $v.Id }}', true)" 
                         data-id="{{ $v.Id }}" 
                         data-title="{{ $v.Title }}" 
                         data-category="{{ $v.Category }}" 
@@ -229,7 +229,7 @@
                     <span>Releases</span>
                     <div class="items">
                         {{ range $k, $v := .Releases }}
-                        <div class="itemtl" >
+                        <div class="itemrl" >
                             <div class="row2">
                                 <span class="dy">{{ $v.Day }}</span>
                                 <div class="col2">
@@ -264,12 +264,50 @@
                     </div>
                 </div>
                 <div class="propsbc">
-                    <button class="btnb">Publish</button>
+                    <button class="btnb" onclick="showModal()">Publish</button>
                 </div>
             </div>
         </div>
 
         <div id="stt" class="sttbrd hd"></div>
+    </div>
+
+    <div class="rlmodal hd" id="rlmodal" onclick="closeModal()" >
+        <form action="" method="post" onclick="stopEvent(self.event)">
+            <span class="tlwrd">Reels of power</span>
+            <div class="spr20"></div>
+            <div class="col">
+                <label for="synopsis"></label>
+                <textarea name="synopsis" id="synopsis" cols="30" rows="10" required></textarea>
+            </div>
+            <div class="spr10"></div>
+            <div class="col">
+                <label for="fcategory">Category </label>
+                <select name="fcategory" id="fcategory" class="fmselect" disabled>
+                    <option value="0">TBD</option>
+                    <option value="1">Thriller</option>
+                    <option value="2">Comedy</option>
+                </select>
+            </div>
+            <div class="spr20"></div>
+            <div class="col">
+                <label for="thumbnail">Thumbnail </label>
+                <input type="file" name="thumbnail" id="thumbnail" required>
+            </div>
+            <div class="col">
+                <label for="trailer">Trailer </label>
+                <input type="file" name="trailer" id="trailer" required>
+            </div>
+            <div class="col">
+                <label for="release">Release </label>
+                <input type="file" name="release" id="release" required>
+            </div>
+            <div class="spr40"></div>
+            <div class="row1">
+                <button class="btnr" onclick="closeModal()">Cancle</button>
+                <button class="btnb">Publish</button>
+            </div>
+        </form>
     </div>
 
     <script src="/public/admin.js"></script>

@@ -64,31 +64,42 @@ function timelineFormClose(){
 
 function propToggle(id) {
     var idv = ""
+    var elms = ""
     if (id === 0) {
         idv = "props"
+        elms = "itemtl"
     } else {
         idv = "props1"
+        elms = "itemrl"
     }
-    var itms = document.getElementsByClassName("itemtl")
+    var itms = document.getElementsByClassName(elms)
     for (let index = 0; index < itms.length; index++) {
-        itms.item(index).className = "itemtl"    
+        itms.item(index).className = elms    
     }
     var props = document.getElementById(idv)
-    props.className = "props hd"
-    var ntl = document.getElementById("ntitle")
-    var nct = document.getElementById("ncategory")
-    var ncl = document.getElementById("ndate")
-    ntl.className = "nttl hd"
-    nct.className = "ncat hd"
-    ncl.className = "ndt hd"
+    props.className = `${elms} hd`
+    if (id === 0) {
+        var ntl = document.getElementById("ntitle")
+        var nct = document.getElementById("ncategory")
+        var ncl = document.getElementById("ndate")
+        ntl.className = "nttl hd"
+        nct.className = "ncat hd"
+        ncl.className = "ndt hd"
+    }else{
+        // 
+    }
+
 }
 
 function timelineSelect(id, ref=false){
     var clnm = ""
+    var elms = ""
     if (ref) {
         clnm = "props1"
+        elms = "itemrl"
     }else{
         clnm = "props"
+        elms = "itemtl"
         var ntl = document.getElementById("ntitle")
         var nct = document.getElementById("ncategory")
         var ncl = document.getElementById("ndate")
@@ -106,7 +117,7 @@ function timelineSelect(id, ref=false){
     }
     var props = document.getElementById(clnm)
 
-    var itms = document.getElementsByClassName("itemtl")
+    var itms = document.getElementsByClassName(elms)
     var title = ""
     var category = ""
     var date = null
@@ -114,13 +125,13 @@ function timelineSelect(id, ref=false){
 
     for (let index = 0; index < itms.length; index++) {
         if(itms.item(index).getAttribute("data-id") === id){
-            itms.item(index).className = "itemtl selected"
+            itms.item(index).className = `${elms} selected`
             title = itms.item(index).getAttribute("data-title")
             category = itms.item(index).getAttribute("data-category")
             date = itms.item(index).getAttribute("data-date")
             refId = itms.item(index).getAttribute("data-ref")
         }else{
-            itms.item(index).className = "itemtl"
+            itms.item(index).className = elms
         }
     }
 
@@ -209,7 +220,6 @@ function editTimeline() {
     del.item(0).className = "btnr del hd"
     // show inputs
     ntl.value = ttl
-    console.log(`${rld.getFullYear()}-${(rld.getMonth() + 1).toString().padStart(2, "0")}-${rld.getDate().toString().padStart(2, "0")}`)
     ncl.value = `${rld.getFullYear()}-${(rld.getMonth() + 1).toString().padStart(2, "0")}-${rld.getDate().toString().padStart(2, "0")}`
     ntl.className = "nttl"
     nct.className = "ncat"
@@ -249,4 +259,22 @@ function delTimeline() {
 
 function fetchRelease(id) {
     // get release of the given id 
+}
+
+function showModal() {
+    var mdl = document.getElementById("rlmodal")
+    var props = document.getElementById("props1")
+    var tl = props.getElementsByClassName("tlwrd")
+    var pt = mdl.getElementsByClassName("tlwrd")
+    pt.item(0).innerHTML = tl.item(0).innerHTML
+    mdl.className = "rlmodal"
+}
+
+function closeModal() {
+    var mdl = document.getElementById("rlmodal")
+    mdl.className = "rlmodal hd"
+}
+
+function stopEvent(e) {
+    e.stopPropagation()
 }
