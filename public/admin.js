@@ -54,12 +54,13 @@ function timelineForm(){
     }
 }
 
-function timelineFormClose(){
+function timelineFormClose(e){
     var form = document.getElementById("tlform")
     var btn = document.getElementById("tlformbt")
     
     btn.className = "btnb"
     form.className = "hd"
+    e.preventDefault()
 }
 
 function propToggle(id) {
@@ -270,11 +271,21 @@ function showModal() {
     mdl.className = "rlmodal"
 }
 
-function closeModal() {
+function closeModal(e) {
     var mdl = document.getElementById("rlmodal")
     mdl.className = "rlmodal hd"
+    e.preventDefault()
 }
 
 function stopEvent(e) {
     e.stopPropagation()
+}
+
+function updateTimeline(itemid) {
+    alert("Under development")
+}
+
+function publishRelease(e) {
+    alert("Under development")
+    e.preventDefault()
 }

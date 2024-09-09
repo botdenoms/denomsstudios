@@ -95,7 +95,7 @@
                 <div>
                     <button class="btnb" onclick="timelineForm()" id="tlformbt">Add Timeline</button>
                     <div id="tlform" class="hd">
-                        <form action="/" method="post">
+                        <form action="/admin/db/timeline" method="post">
                             <div class="col">
                                 <label for="title">Title </label>
                                 <input type="text" name="title" id="title" required>
@@ -116,7 +116,7 @@
                             </div>
                             <div class="spr20"></div>
                             <div class="row1">
-                                <button class="btnr" onclick="timelineFormClose()">Cancel</button>
+                                <button class="btnr" onclick="timelineFormClose(self.event)">Cancel</button>
                                 <button class="btnb">Add</button>
                             </div>
                         </form>
@@ -183,7 +183,7 @@
                     <button class="btnb pkb hd" onclick="peekShow()" id="pkb">Peek</button>
                     <a class="btnb rels hd" href="#" >Release</a>
                     <div class="row1 hd">
-                        <button class="btnb" >Update</button>
+                        <button class="btnb" onclick="updateTimeline()">Update</button>
                         <button class="btnr" onclick="closeEdit()">Cancel</button>
                     </div>
                 </div>
@@ -273,7 +273,7 @@
     </div>
 
     <div class="rlmodal hd" id="rlmodal" onclick="closeModal()" >
-        <form action="" method="post" onclick="stopEvent(self.event)">
+        <form action="/admin/db/release" method="post" onclick="stopEvent(self.event)" enctype="multipart/form-data">
             <span class="tlwrd">Reels of power</span>
             <div class="spr20"></div>
             <div class="col">
@@ -304,8 +304,8 @@
             </div>
             <div class="spr40"></div>
             <div class="row1">
-                <button class="btnr" onclick="closeModal()">Cancle</button>
-                <button class="btnb">Publish</button>
+                <button class="btnr" onclick="closeModal(self.event)">Cancle</button>
+                <button class="btnb" onclick="publishRelease(self.event)">Publish</button>
             </div>
         </form>
     </div>
