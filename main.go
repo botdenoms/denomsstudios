@@ -204,6 +204,141 @@ func HandleTemplateRequest(writer http.ResponseWriter, request *http.Request) {
 		ftmp["Pcount"] = len(pn)
 		ftmp["Rcount"] = len(rl)
 		data = ftmp
+	case "/admin/db/timeline":
+		switch request.Method {
+		// Create
+		case http.MethodPost:
+			title := request.PostFormValue("title")
+			category := request.PostFormValue("category")
+			date := request.PostFormValue("date")
+			if title == "" || category == "" || date == "" {
+				// response
+				tmp := map[string]interface{}{}
+				tmp["error"] = true
+				tmp["message"] = "Timeline creation failed, missing all fields"
+				tmp["id"] = ""
+				data = tmp
+				writer.Header().Set("Content-Type", "application/json")
+				json.NewEncoder(writer).Encode(data)
+				return
+			}
+			fmt.Printf("Title: %v, Cat: %v, Date: %v\n", title, category, date)
+			// write to db point
+			// response
+			tmp := map[string]interface{}{}
+			tmp["error"] = false
+			tmp["message"] = "Timeline created successfully"
+			tmp["id"] = "12548"
+			data = tmp
+			writer.Header().Set("Content-Type", "application/json")
+			json.NewEncoder(writer).Encode(data)
+			return
+		// Read
+		case http.MethodGet:
+			id := request.URL.Query().Get("id")
+			if id == "" {
+				// response for all timeline
+				// get data from db
+				tmp := map[string]interface{}{}
+				tmp["error"] = false
+				tmp["message"] = "All Timeline data"
+				tmp["items"] = 0
+				tmp["data"] = []model.Timeline{}
+				data = tmp
+				writer.Header().Set("Content-Type", "application/json")
+				json.NewEncoder(writer).Encode(data)
+				return
+			}
+			// response for a single timeline
+			// get data from db by the given id
+			// if not found return not found response
+			fmt.Printf("id: %v\n", id)
+			// response
+			tmp := map[string]interface{}{}
+			tmp["error"] = false
+			tmp["message"] = "Single Timeline data"
+			tmp["items"] = 0
+			tmp["data"] = []model.Timeline{}
+			data = tmp
+			writer.Header().Set("Content-Type", "application/json")
+			json.NewEncoder(writer).Encode(data)
+			return
+		// Update
+		case http.MethodPatch:
+			id := request.PostFormValue("id")
+			if id == "" {
+				// response
+				tmp := map[string]interface{}{}
+				tmp["error"] = true
+				tmp["message"] = "Timeline Update failed, missing identifier"
+				tmp["id"] = nil
+				data = tmp
+				writer.Header().Set("Content-Type", "application/json")
+				json.NewEncoder(writer).Encode(data)
+				return
+			}
+			// get item in db with id
+			// if not found return not found error response
+			// get fields to be updated
+			title := request.PostFormValue("title")
+			category := request.PostFormValue("category")
+			date := request.PostFormValue("date")
+			if title == "" && category == "" && date == "" {
+				// response
+				tmp := map[string]interface{}{}
+				tmp["error"] = true
+				tmp["message"] = "Timeline Update failed, No fields to update found"
+				tmp["id"] = id
+				data = tmp
+				writer.Header().Set("Content-Type", "application/json")
+				json.NewEncoder(writer).Encode(data)
+				return
+			}
+			fmt.Printf("Title: %v, Cat: %v, Date: %v\n", title, category, date)
+			// update non-empty fields found
+			tmp := map[string]interface{}{}
+			tmp["error"] = false
+			tmp["message"] = "Timeline updated successfully"
+			tmp["id"] = id
+			data = tmp
+			writer.Header().Set("Content-Type", "application/json")
+			json.NewEncoder(writer).Encode(data)
+			return
+		// Delete
+		case http.MethodDelete:
+			// alert dangerous api point security should be implemented
+			id := request.FormValue("id")
+			if id == "" {
+				// response
+				tmp := map[string]interface{}{}
+				tmp["error"] = true
+				tmp["message"] = "Timeline delete failed, missing identifier"
+				tmp["id"] = nil
+				data = tmp
+				writer.Header().Set("Content-Type", "application/json")
+				json.NewEncoder(writer).Encode(data)
+				return
+			}
+			// get item in db with id
+			// if not found return not found error response
+			// delete item to be deleted
+			tmp := map[string]interface{}{}
+			tmp["error"] = false
+			tmp["message"] = "Timeline Deleted"
+			tmp["id"] = id
+			data = tmp
+			writer.Header().Set("Content-Type", "application/json")
+			json.NewEncoder(writer).Encode(data)
+			return
+		}
+	case "/admin/db/release":
+		tmp := map[string]interface{}{}
+		tmp["error"] = false
+		tmp["message"] = "Under development"
+		data = tmp
+		writer.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(writer).Encode(data)
+		return
 	}
 
 	t := htmlTemplates.Lookup(path)
