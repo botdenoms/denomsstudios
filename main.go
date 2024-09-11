@@ -1,6 +1,7 @@
 package main
 
 import (
+	"database/sql"
 	"denomsstudios/model"
 	"denomsstudios/repo"
 	"encoding/json"
@@ -11,14 +12,12 @@ import (
 	"strconv"
 	"strings"
 	"time"
+
+	_ "modernc.org/sqlite"
 )
 
 var htmlTemplates *template.Template
-
-var curRepo repo.Repository = &repo.MemoryRepo{
-	Timeline: model.Timelines,
-	Releases: model.Releases,
-}
+var curRepo repo.Repository
 
 var aday time.Duration = time.Duration(86400) * time.Second
 var amonth time.Duration = aday * 31
@@ -72,7 +71,7 @@ func HandleTemplateRequest(writer http.ResponseWriter, request *http.Request) {
 			json.NewEncoder(writer).Encode(data)
 			return
 		} else if future != "" {
-			fmt.Printf("Searching for future releasaes\n")
+			fmt.Printf("Searching for future releases\n")
 			dt := curRepo.AllRelease()
 			tmp := []map[string]interface{}{}
 			for _, v := range dt {
@@ -98,17 +97,8 @@ func HandleTemplateRequest(writer http.ResponseWriter, request *http.Request) {
 			json.NewEncoder(writer).Encode(data)
 			return
 		} else {
-			dt := curRepo.AllRelease()
-			var tmp []model.Release
-			for _, v := range dt {
-				if v.Date.Before(time.Now()) {
-					df := time.Until(v.Date)
-					if df.Abs().Hours() < (amonth * 2).Abs().Hours() {
-						tmp = append(tmp, v)
-					}
-				}
-			}
-			data = tmp
+			dt := curRepo.AllReleaseSorted()
+			data = dt[:1]
 		}
 	case "/release":
 		path = "release.html"
@@ -131,8 +121,8 @@ func HandleTemplateRequest(writer http.ResponseWriter, request *http.Request) {
 		dt := curRepo.AllTimeline()
 		tmp := map[int][]interface{}{}
 		ftmp := map[int][]interface{}{}
-		for _, v := range dt {
-			if len(tmp[v.Date.Year()])%2 == 0 {
+		for i, v := range dt {
+			if i%2 == 0 {
 				v.Left = true
 			} else {
 				v.Left = false
@@ -223,12 +213,28 @@ func HandleTemplateRequest(writer http.ResponseWriter, request *http.Request) {
 				return
 			}
 			fmt.Printf("Title: %v, Cat: %v, Date: %v\n", title, category, date)
+			dt, er := time.Parse(time.DateOnly, date)
+			if er != nil {
+				fmt.Printf("Error parsing date\nError: %v\n", er.Error())
+			}
+			tl := model.Timeline{Id: "100005", Title: title, Category: category, Ref: "", Date: dt}
 			// write to db point
+			id, idr := curRepo.CreateTimeline(tl)
+			if idr {
+				tmp := map[string]interface{}{}
+				tmp["error"] = true
+				tmp["message"] = "Timeline created unsuccessfully"
+				tmp["id"] = ""
+				data = tmp
+				writer.Header().Set("Content-Type", "application/json")
+				json.NewEncoder(writer).Encode(data)
+				return
+			}
 			// response
 			tmp := map[string]interface{}{}
 			tmp["error"] = false
 			tmp["message"] = "Timeline created successfully"
-			tmp["id"] = "12548"
+			tmp["id"] = id
 			data = tmp
 			writer.Header().Set("Content-Type", "application/json")
 			json.NewEncoder(writer).Encode(data)
@@ -239,11 +245,12 @@ func HandleTemplateRequest(writer http.ResponseWriter, request *http.Request) {
 			if id == "" {
 				// response for all timeline
 				// get data from db
+				tls := curRepo.AllTimeline()
 				tmp := map[string]interface{}{}
 				tmp["error"] = false
 				tmp["message"] = "All Timeline data"
-				tmp["items"] = 0
-				tmp["data"] = []model.Timeline{}
+				tmp["items"] = len(tls)
+				tmp["data"] = tls
 				data = tmp
 				writer.Header().Set("Content-Type", "application/json")
 				json.NewEncoder(writer).Encode(data)
@@ -251,14 +258,26 @@ func HandleTemplateRequest(writer http.ResponseWriter, request *http.Request) {
 			}
 			// response for a single timeline
 			// get data from db by the given id
+			tl, nf := curRepo.TimelineById(id)
 			// if not found return not found response
+			if nf {
+				tmp := map[string]interface{}{}
+				tmp["error"] = false
+				tmp["message"] = "Timeline not found"
+				tmp["items"] = 0
+				tmp["data"] = nil
+				data = tmp
+				writer.Header().Set("Content-Type", "application/json")
+				json.NewEncoder(writer).Encode(data)
+				return
+			}
 			fmt.Printf("id: %v\n", id)
 			// response
 			tmp := map[string]interface{}{}
 			tmp["error"] = false
-			tmp["message"] = "Single Timeline data"
-			tmp["items"] = 0
-			tmp["data"] = []model.Timeline{}
+			tmp["message"] = "Timeline item found"
+			tmp["items"] = 1
+			tmp["data"] = tl
 			data = tmp
 			writer.Header().Set("Content-Type", "application/json")
 			json.NewEncoder(writer).Encode(data)
@@ -278,12 +297,24 @@ func HandleTemplateRequest(writer http.ResponseWriter, request *http.Request) {
 				return
 			}
 			// get item in db with id
-			// if not found return not found error response
+			tl, nf := curRepo.TimelineById(id)
+			// if not found return not found response
+			if nf {
+				tmp := map[string]interface{}{}
+				tmp["error"] = false
+				tmp["message"] = "TTimeline Update failed, Timeline item not found"
+				tmp["id"] = id
+				data = tmp
+				writer.Header().Set("Content-Type", "application/json")
+				json.NewEncoder(writer).Encode(data)
+				return
+			}
 			// get fields to be updated
 			title := request.PostFormValue("title")
 			category := request.PostFormValue("category")
 			date := request.PostFormValue("date")
-			if title == "" && category == "" && date == "" {
+			ref := request.PostFormValue("ref")
+			if title == "" && category == "" && date == "" && ref == "" {
 				// response
 				tmp := map[string]interface{}{}
 				tmp["error"] = true
@@ -294,12 +325,37 @@ func HandleTemplateRequest(writer http.ResponseWriter, request *http.Request) {
 				json.NewEncoder(writer).Encode(data)
 				return
 			}
-			fmt.Printf("Title: %v, Cat: %v, Date: %v\n", title, category, date)
+			fmt.Printf("Title: %v, Cat: %v, Ref: %v, Date: %v\n", title, category, ref, date)
 			// update non-empty fields found
+			upmp := map[string]interface{}{}
+			if title != "" {
+				upmp["Title"] = title
+			}
+			if category != "" {
+				upmp["Category"] = category
+			}
+			if date != "" {
+				upmp["ReleaseDate"] = date
+			}
+			if ref != "" {
+				upmp["ReleaseId"] = ref
+			}
+			// db update
+			uid, er := curRepo.UpdateTimeline(tl.Id, upmp)
+			if er {
+				tmp := map[string]interface{}{}
+				tmp["error"] = true
+				tmp["message"] = "Timeline Update failed, Error updating data"
+				tmp["id"] = id
+				data = tmp
+				writer.Header().Set("Content-Type", "application/json")
+				json.NewEncoder(writer).Encode(data)
+				return
+			}
 			tmp := map[string]interface{}{}
 			tmp["error"] = false
 			tmp["message"] = "Timeline updated successfully"
-			tmp["id"] = id
+			tmp["id"] = uid
 			data = tmp
 			writer.Header().Set("Content-Type", "application/json")
 			json.NewEncoder(writer).Encode(data)
@@ -384,4 +440,20 @@ func init() {
 		panic(err)
 	}
 	fmt.Printf("Loaded templates\n")
+
+	fmt.Printf("Drivers found: %v\n", sql.Drivers())
+	db, er := sql.Open("sqlite", "test.db")
+
+	curRepo = repo.MysqlRepo{Db: db}
+	// curRepo = repo.MemoryRepo{
+	// 	Timeline: model.Timelines,
+	// 	Releases: model.Releases,
+	// }
+
+	if er != nil {
+		fmt.Printf("Error on opening database\nError : %v\n", er.Error())
+		// panic(er)
+	} else {
+		fmt.Printf("Database initialized: %v\n", curRepo.Name())
+	}
 }
