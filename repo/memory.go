@@ -26,6 +26,10 @@ func (r MemoryRepo) CreateRelease(items model.Release) (string, bool) {
 	return "", true
 }
 
+func (r MemoryRepo) CreateTimeline(items model.Timeline) (string, bool) {
+	return "", true
+}
+
 func (r MemoryRepo) AllRelease() []model.Release {
 	return r.Releases
 }
@@ -77,6 +81,14 @@ func (r MemoryRepo) ReleaseById(id string) (model.Release, bool) {
 		}
 	}
 	return model.Release{}, true
+}
+
+func (r MemoryRepo) TimelineById(id string) (model.Timeline, bool) {
+	return model.Timeline{}, true
+}
+
+func (r MemoryRepo) UpdateTimeline(id string, data map[string]interface{}) (string, bool) {
+	return "", true
 }
 
 func (r MemoryRepo) PendingTimeline() []model.Timeline {
