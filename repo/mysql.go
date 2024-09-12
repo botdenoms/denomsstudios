@@ -33,8 +33,16 @@ func (d MysqlRepo) RandomRelease() model.Release {
 }
 
 func (d MysqlRepo) CreateRelease(rel model.Release) (string, bool) {
-	d.Db.Exec(`INSERT INTO Timeline Release (?, ?, ?, ?, ?, ?, ?, ?)`, rel)
-	return "", true
+	r, e := d.Db.Exec(`INSERT INTO Release VALUES (?, ?, ?, ?, ?, ?, ?, ?)`, rel.Id, rel.Title, rel.Category, rel.Date.Format(time.DateOnly), rel.Synopsis, rel.Thumbnail, rel.Trailer, rel.Url)
+	if e != nil {
+		fmt.Printf("Error on insert qr\nError: %v", e.Error())
+		return "", true
+	}
+	rid, re := r.LastInsertId()
+	if re != nil {
+		return "", true
+	}
+	return strconv.Itoa(int(rid)), false
 }
 
 func (d MysqlRepo) CreateTimeline(tl model.Timeline) (string, bool) {
