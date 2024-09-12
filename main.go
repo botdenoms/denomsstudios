@@ -388,6 +388,143 @@ func HandleTemplateRequest(writer http.ResponseWriter, request *http.Request) {
 			return
 		}
 	case "/admin/db/release":
+		// Create
+		switch request.Method {
+		case http.MethodPost:
+			err := request.ParseMultipartForm(100000)
+			if err == nil {
+				title := request.PostFormValue("title")
+				category := request.PostFormValue("fcategory")
+				date := request.PostFormValue("date")
+				synop := request.PostFormValue("synopsis")
+				_, thumbhdr, thumbe := request.FormFile("thumbnail")
+				_, trlhdr, trle := request.FormFile("trailer")
+				_, relhdr, rele := request.FormFile("release")
+				if title == "" || category == "" || date == "" || synop == "" {
+					// response
+					tmp := map[string]interface{}{}
+					tmp["error"] = true
+					tmp["message"] = "Release creation failed, missing fields"
+					tmp["id"] = ""
+					data = tmp
+					writer.Header().Set("Content-Type", "application/json")
+					json.NewEncoder(writer).Encode(data)
+					return
+				}
+				fmt.Printf("Title: %v, Cat: %v, Date: %v\n", title, category, date)
+				if thumbe == nil {
+					fmt.Printf("Thumbnail --> Filename: %v, \t Size: %v\n", thumbhdr.Filename, thumbhdr.Size)
+				} else {
+					tmp := map[string]interface{}{}
+					tmp["error"] = true
+					tmp["message"] = "Release created unsuccessfully, Error on reading Thumbnail file"
+					tmp["id"] = ""
+					data = tmp
+					writer.Header().Set("Content-Type", "application/json")
+					json.NewEncoder(writer).Encode(data)
+					return
+				}
+				if trle == nil {
+					fmt.Printf("Trailer --> Filename: %v, \t Size: %v\n", trlhdr.Filename, trlhdr.Size)
+				} else {
+					tmp := map[string]interface{}{}
+					tmp["error"] = true
+					tmp["message"] = "Release created unsuccessfully, Error on reading Trailer file"
+					tmp["id"] = ""
+					data = tmp
+					writer.Header().Set("Content-Type", "application/json")
+					json.NewEncoder(writer).Encode(data)
+					return
+				}
+				if rele == nil {
+					fmt.Printf("Release --> Filename: %v, \t Size: %v\n", relhdr.Filename, relhdr.Size)
+				} else {
+					tmp := map[string]interface{}{}
+					tmp["error"] = true
+					tmp["message"] = "Release created unsuccessfully, Error on reading Release file"
+					tmp["id"] = ""
+					data = tmp
+					writer.Header().Set("Content-Type", "application/json")
+					json.NewEncoder(writer).Encode(data)
+					return
+				}
+				dt, er := time.Parse(time.DateOnly, date)
+				if er != nil {
+					fmt.Printf("Error parsing date\nError: %v\n", er.Error())
+				}
+				// upload received files somewhere & get back their url information
+				thumburl := "/public/thum.png"
+				trlurl := "/public/dribble.mp4"
+				relurl := "/public/dribble.mp4"
+				rel := model.Release{Id: "900003", Title: title, Category: category, Date: dt, Synopsis: synop, Thumbnail: thumburl, Trailer: trlurl, Url: relurl}
+				// write to db point
+				id, idr := curRepo.CreateRelease(rel)
+				if idr {
+					tmp := map[string]interface{}{}
+					tmp["error"] = true
+					tmp["message"] = "Release created unsuccessfully"
+					tmp["id"] = ""
+					data = tmp
+					writer.Header().Set("Content-Type", "application/json")
+					json.NewEncoder(writer).Encode(data)
+					return
+				}
+				// response
+				tmp := map[string]interface{}{}
+				tmp["error"] = false
+				tmp["message"] = "Timeline created successfully"
+				tmp["id"] = id
+				data = tmp
+				writer.Header().Set("Content-Type", "application/json")
+				json.NewEncoder(writer).Encode(data)
+				return
+			} else {
+				fmt.Printf("Error parsing Form\nError: %v\n", err.Error())
+			}
+		// Read
+		case http.MethodGet:
+			id := request.URL.Query().Get("id")
+			if id == "" {
+				// response for all Release
+				// get data from db
+				rels := curRepo.AllRelease()
+				tmp := map[string]interface{}{}
+				tmp["error"] = false
+				tmp["message"] = "All Release data"
+				tmp["items"] = len(rels)
+				tmp["data"] = rels
+				data = tmp
+				writer.Header().Set("Content-Type", "application/json")
+				json.NewEncoder(writer).Encode(data)
+				return
+			}
+			// response for a single Release
+			// get data from db by the given id
+			rel, nf := curRepo.ReleaseById(id)
+			// if not found return not found response
+			if nf {
+				tmp := map[string]interface{}{}
+				tmp["error"] = false
+				tmp["message"] = "Timeline not found"
+				tmp["items"] = 0
+				tmp["data"] = nil
+				data = tmp
+				writer.Header().Set("Content-Type", "application/json")
+				json.NewEncoder(writer).Encode(data)
+				return
+			}
+			fmt.Printf("id: %v\n", id)
+			// response
+			tmp := map[string]interface{}{}
+			tmp["error"] = false
+			tmp["message"] = "Release item found"
+			tmp["items"] = 1
+			tmp["data"] = rel
+			data = tmp
+			writer.Header().Set("Content-Type", "application/json")
+			json.NewEncoder(writer).Encode(data)
+			return
+		}
 		tmp := map[string]interface{}{}
 		tmp["error"] = false
 		tmp["message"] = "Under development"
@@ -441,7 +578,7 @@ func init() {
 	}
 	fmt.Printf("Loaded templates\n")
 
-	fmt.Printf("Drivers found: %v\n", sql.Drivers())
+	// fmt.Printf("Drivers found: %v\n", sql.Drivers())
 	db, er := sql.Open("sqlite", "test.db")
 
 	curRepo = repo.MysqlRepo{Db: db}
