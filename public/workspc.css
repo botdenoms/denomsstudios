@@ -120,7 +120,11 @@
 
 .row1{
     display: flex;
-    justify-content: space-between;
+    justify-content: space-around;
+}
+
+.wspr10{
+    width: 10px;
 }
 
 .spr10{
@@ -129,6 +133,7 @@
 
 .props{
     min-width: calc(.2 * 100vw);
+    max-width: calc(.3 * 100vw);
     padding: 10px;
     background: #0058ff37;
     display: flex;
@@ -152,6 +157,8 @@
 
 .propsb{
     margin: 20px 0;
+    display: flex;
+    justify-content: space-between;
 }
 
 .propsbc{
@@ -295,10 +302,38 @@
 }
 
 .pkimg{
-    height: 80px;
-    width: 120px;
+    height: 150px;
+    width: 150px;
 }
 
 button:disabled{
     background: #606060cc;
+}
+
+#ldr, #ldr2{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#ldr1{
+    height: 40px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.ldrcont{
+    transform-origin: center;
+    animation-delay: 50ms;
+    animation: spinner 600ms ease-in-out infinite;
+}
+
+.dots{
+    margin: 2px;
+    height: 4px;
+    width: 4px;
+    background: #fff;
+    border-radius: 50%;
 }

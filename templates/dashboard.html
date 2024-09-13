@@ -49,7 +49,7 @@
 
     <div class="workspc">
         <div id="dshb" class="dshbrd">
-            <a class="current" href="/release?id={{ .Prev.Id }}">
+            <a class="current" href="/release?id={{ .Prev.Id }}" target="_blank">
                 <img src="{{ .Prev.Thumbnail }}" alt="thumb">
                 <div class="dts">
                     <span>Last release</span>
@@ -104,9 +104,9 @@
                             <div class="col">
                                 <label for="category">Category </label>
                                 <select name="category" id="category" class="fmselect">
-                                    <option value="0">TBD</option>
-                                    <option value="1">Thriller</option>
-                                    <option value="2">Comedy</option>
+                                    {{ range $k, $v := .Categories  }}
+                                    <option value="{{ $k }}" >{{ $v }}</option>
+                                    {{ end }}
                                 </select>
                             </div>
                             <div class="spr10"></div>
@@ -117,7 +117,14 @@
                             <div class="spr20"></div>
                             <div class="row1">
                                 <button class="btnr" onclick="timelineFormClose(self.event)">Cancel</button>
-                                <button class="btnb">Add</button>
+                                <button class="btnb" id="smbt" onclick="createTimeline(self.event)">Add</button>
+                                <div id="ldr2" class="hd">
+                                    <div class="ldrcont">
+                                        <div class="dots"></div>
+                                        <div class="dots"></div>
+                                        <div class="dots"></div>
+                                    </div>
+                                </div>
                             </div>
                         </form>
                     </div>
@@ -125,7 +132,7 @@
                 
                 <div class="lstview">
                     <span>Current timeline</span>
-                    <div class="items">
+                    <div class="items" id="tllist">
                         {{ range $k, $v := .Timeline }}
                         <div class="itemtl" onclick="timelineSelect('{{ $v.Id }}')" 
                         data-id="{{ $v.Id }}" 
@@ -144,7 +151,7 @@
                             <span class="ctword1">{{ $v.Category }}</span>
                             <div class="spr20"></div>
                             {{ if ne $v.Ref ""}}
-                            <a href="/release?id={{ $v.Ref }}" class="navlnk">Release Notes</a>
+                            <a href="/release?id={{ $v.Ref }}" class="navlnk" target="_blank">Release Notes</a>
                             {{ end }}
                         </div>
                         {{ end }}
@@ -160,10 +167,9 @@
                         <input class="hd nttl" type="text" name="ntitle" id="ntitle" required>
                         <span class="ctgwht">Category</span>
                         <select class="hd ncat" name="ncategory" id="ncategory" value="0">
-                            <option value="0">TBD</option>
-                            <option value="1">Comedy</option>
-                            <option value="2">Thriller</option>
-                            <option value="3">Animation</option>
+                            {{ range $k, $v := .Categories  }}
+                            <option value="{{ $k }}" >{{ $v }}</option>
+                            {{ end }}
                         </select>
                     </div>
                     <div class="icon" onclick="propToggle(0)">
@@ -178,13 +184,28 @@
                     </div>
                 </div>
                 <div class="propsb" id="propsb">
+                    <div id="ldr" class="hd">
+                        <div class="ldrcont">
+                            <div class="dots"></div>
+                            <div class="dots"></div>
+                            <div class="dots"></div>
+                        </div>
+                    </div>
                     <button class="btnb edit hd" onclick="editTimeline()">Edit</button>
                     <button class="btnr del hd" onclick="delTimeline()">Delete</button>
                     <button class="btnb pkb hd" onclick="peekShow()" id="pkb">Peek</button>
-                    <a class="btnb rels hd" href="#" >Release</a>
+                    <a class="btnb rels hd" href="#" target="_blank">Release</a>
                     <div class="row1 hd">
                         <button class="btnb" onclick="updateTimeline()">Update</button>
+                        <div class="wspr10"></div>
                         <button class="btnr" onclick="closeEdit()">Cancel</button>
+                    </div>
+                </div>
+                <div id="ldr1" class="hd">
+                    <div class="ldrcont">
+                        <div class="dots"></div>
+                        <div class="dots"></div>
+                        <div class="dots"></div>
                     </div>
                 </div>
                 <div class="peek hd" id="peek">
@@ -284,9 +305,9 @@
             <div class="col">
                 <label for="fcategory">Category </label>
                 <select name="fcategory" id="fcategory" class="fmselect" disabled>
-                    <option value="0">TBD</option>
-                    <option value="1">Thriller</option>
-                    <option value="2">Comedy</option>
+                    {{ range $k, $v := .Categories  }}
+                    <option value="{{ $k }}" >{{ $v }}</option>
+                    {{ end }}
                 </select>
             </div>
             <div class="spr20"></div>

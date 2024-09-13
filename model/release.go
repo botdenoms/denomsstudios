@@ -30,8 +30,6 @@ func (r Release) ToJson() map[string]interface{} {
 	mp["Date"] = r.HumanDate()
 	mp["Thumbnail"] = r.Thumbnail
 	mp["Id"] = r.Id
-	mp["Id"] = r.Id
-
 	return mp
 }
 

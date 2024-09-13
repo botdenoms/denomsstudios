@@ -19,6 +19,20 @@ import (
 var htmlTemplates *template.Template
 var curRepo repo.Repository
 
+var categories = []string{
+	"TBD",
+	"Series",
+	"Brand",
+	"Comedy",
+	"Music",
+	"Education",
+	"Crime",
+	"Politics",
+	"Drama",
+	"Kids",
+	"Satire",
+}
+
 var aday time.Duration = time.Duration(86400) * time.Second
 var amonth time.Duration = aday * 31
 
@@ -193,6 +207,7 @@ func HandleTemplateRequest(writer http.ResponseWriter, request *http.Request) {
 		ftmp["Next"] = pn[0]
 		ftmp["Pcount"] = len(pn)
 		ftmp["Rcount"] = len(rl)
+		ftmp["Categories"] = categories
 		data = ftmp
 	case "/admin/db/timeline":
 		switch request.Method {
@@ -217,7 +232,8 @@ func HandleTemplateRequest(writer http.ResponseWriter, request *http.Request) {
 			if er != nil {
 				fmt.Printf("Error parsing date\nError: %v\n", er.Error())
 			}
-			tl := model.Timeline{Id: "100005", Title: title, Category: category, Ref: "", Date: dt}
+			cati, _ := strconv.Atoi(category)
+			tl := model.Timeline{Id: "100008", Title: title, Category: categories[cati], Ref: "", Date: dt}
 			// write to db point
 			id, idr := curRepo.CreateTimeline(tl)
 			if idr {
@@ -235,6 +251,7 @@ func HandleTemplateRequest(writer http.ResponseWriter, request *http.Request) {
 			tmp["error"] = false
 			tmp["message"] = "Timeline created successfully"
 			tmp["id"] = id
+			tmp["data"] = tl
 			data = tmp
 			writer.Header().Set("Content-Type", "application/json")
 			json.NewEncoder(writer).Encode(data)
@@ -325,14 +342,20 @@ func HandleTemplateRequest(writer http.ResponseWriter, request *http.Request) {
 				json.NewEncoder(writer).Encode(data)
 				return
 			}
-			fmt.Printf("Title: %v, Cat: %v, Ref: %v, Date: %v\n", title, category, ref, date)
+			cati, ce := strconv.Atoi(category)
+			if ce != nil {
+				fmt.Printf("Error parsing category\nError:%v\n", ce.Error())
+				fmt.Printf("Title: %v, Cat: %v, Ref: %v, Date: %v\n", title, "Error", ref, date)
+			} else {
+				fmt.Printf("Title: %v, Cat: %v, Ref: %v, Date: %v\n", title, categories[cati], ref, date)
+			}
 			// update non-empty fields found
 			upmp := map[string]interface{}{}
 			if title != "" {
 				upmp["Title"] = title
 			}
 			if category != "" {
-				upmp["Category"] = category
+				upmp["Category"] = categories[cati]
 			}
 			if date != "" {
 				upmp["ReleaseDate"] = date
@@ -411,7 +434,8 @@ func HandleTemplateRequest(writer http.ResponseWriter, request *http.Request) {
 					json.NewEncoder(writer).Encode(data)
 					return
 				}
-				fmt.Printf("Title: %v, Cat: %v, Date: %v\n", title, category, date)
+				cati, _ := strconv.Atoi(category)
+				fmt.Printf("Title: %v, Cat: %v, Date: %v\n", title, categories[cati], date)
 				if thumbe == nil {
 					fmt.Printf("Thumbnail --> Filename: %v, \t Size: %v\n", thumbhdr.Filename, thumbhdr.Size)
 				} else {
@@ -456,7 +480,7 @@ func HandleTemplateRequest(writer http.ResponseWriter, request *http.Request) {
 				thumburl := "/public/thum.png"
 				trlurl := "/public/dribble.mp4"
 				relurl := "/public/dribble.mp4"
-				rel := model.Release{Id: "900003", Title: title, Category: category, Date: dt, Synopsis: synop, Thumbnail: thumburl, Trailer: trlurl, Url: relurl}
+				rel := model.Release{Id: "900005", Title: title, Category: categories[cati], Date: dt, Synopsis: synop, Thumbnail: thumburl, Trailer: trlurl, Url: relurl}
 				// write to db point
 				id, idr := curRepo.CreateRelease(rel)
 				if idr {
