@@ -416,6 +416,7 @@ func HandleTemplateRequest(writer http.ResponseWriter, request *http.Request) {
 		case http.MethodPost:
 			err := request.ParseMultipartForm(100000)
 			if err == nil {
+				refid := request.PostFormValue("id")
 				title := request.PostFormValue("title")
 				category := request.PostFormValue("fcategory")
 				date := request.PostFormValue("date")
@@ -423,7 +424,8 @@ func HandleTemplateRequest(writer http.ResponseWriter, request *http.Request) {
 				_, thumbhdr, thumbe := request.FormFile("thumbnail")
 				_, trlhdr, trle := request.FormFile("trailer")
 				_, relhdr, rele := request.FormFile("release")
-				if title == "" || category == "" || date == "" || synop == "" {
+
+				if title == "" || category == "" || date == "" || synop == "" || refid == "" {
 					// response
 					tmp := map[string]interface{}{}
 					tmp["error"] = true
@@ -493,10 +495,23 @@ func HandleTemplateRequest(writer http.ResponseWriter, request *http.Request) {
 					json.NewEncoder(writer).Encode(data)
 					return
 				}
-				// response
+				// update timeline ref field
+				upmp := map[string]interface{}{}
+				upmp["ReleaseId"] = id
+				_, uns := curRepo.UpdateTimeline(refid, upmp)
+				if uns {
+					tmp := map[string]interface{}{}
+					tmp["error"] = true
+					tmp["message"] = "Timeline update unsuccessfully"
+					tmp["id"] = id
+					data = tmp
+					writer.Header().Set("Content-Type", "application/json")
+					json.NewEncoder(writer).Encode(data)
+					return
+				}
 				tmp := map[string]interface{}{}
 				tmp["error"] = false
-				tmp["message"] = "Timeline created successfully"
+				tmp["message"] = "Release created & Timeline updated successfully"
 				tmp["id"] = id
 				data = tmp
 				writer.Header().Set("Content-Type", "application/json")
