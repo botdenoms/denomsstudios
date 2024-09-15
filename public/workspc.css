@@ -87,6 +87,38 @@
     background: #404040;
     height: 100%;
     cursor: default;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.msg{
+    position: absolute;
+    top: 15%;
+    right: 40px;
+    padding: 0 10px;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: #ffffff88;
+    border-radius: 5px;
+    animation-delay: 2s;
+    /* animation: fadeout 5s ease-in forwards; */
+}
+
+.msg span{
+    padding: 10px 20px;
+    color: #022b09;
+    font-size: 14px;
+}
+
+@keyframes fadeout {
+    0%{
+        opacity: 1;
+    }
+    50%{opacity: .6;}
+    100%{opacity: 0;}
 }
 
 .selected{
@@ -310,7 +342,7 @@ button:disabled{
     background: #606060cc;
 }
 
-#ldr, #ldr2{
+#ldr, #ldr2, #ldr3{
     display: flex;
     justify-content: center;
     align-items: center;

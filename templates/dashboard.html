@@ -223,7 +223,7 @@
             <div class="lstolst">
                 <div class="lstview">
                     <span>On timeline</span>
-                    <div class="items">
+                    <div class="items" id="itl">
                         {{ range $k, $v := .Pending }}
                         <div class="itemrl" onclick="timelineSelect('{{ $v.Id }}', true)" 
                         data-id="{{ $v.Id }}" 
@@ -248,9 +248,9 @@
 
                 <div class="lstview">
                     <span>Releases</span>
-                    <div class="items">
+                    <div class="items" id="irl">
                         {{ range $k, $v := .Releases }}
-                        <div class="itemrl" >
+                        <div class="itemrl">
                             <div class="row2">
                                 <span class="dy">{{ $v.Day }}</span>
                                 <div class="col2">
@@ -261,7 +261,7 @@
                             <span class="tlwrd1">{{ $v.Title }}</span>
                             <span class="ctword1">{{ $v.Category }}</span>
                             <div class="spr20"></div>
-                            <a href="/release?id={{ $v.Id }}" class="navlnk">Release Notes</a>
+                            <a href="/release?id={{ $v.Id }}" class="navlnk" target="_blank">Release Notes</a>
                         </div>
                         {{ end }}
                     </div>
@@ -293,7 +293,11 @@
         <div id="stt" class="sttbrd hd"></div>
     </div>
 
-    <div class="rlmodal hd" id="rlmodal" onclick="closeModal()" >
+    <div class="msg hd" id="msg">
+        <span>Message text</span>
+    </div>
+
+    <div class="rlmodal hd" id="rlmodal" onclick="closeModal(self.event)" >
         <form action="/admin/db/release" method="post" onclick="stopEvent(self.event)" enctype="multipart/form-data">
             <span class="tlwrd">Reels of power</span>
             <div class="spr20"></div>
@@ -324,7 +328,14 @@
                 <input type="file" name="release" id="release" required>
             </div>
             <div class="spr40"></div>
-            <div class="row1">
+            <div id="ldr3" class="hd">
+                <div class="ldrcont">
+                    <div class="dots"></div>
+                    <div class="dots"></div>
+                    <div class="dots"></div>
+                </div>
+            </div>
+            <div class="row1" id="rbtns">
                 <button class="btnr" onclick="closeModal(self.event)">Cancle</button>
                 <button class="btnb" onclick="publishRelease(self.event)">Publish</button>
             </div>

@@ -152,7 +152,10 @@ function timelineSelect(id, ref=false){
     ct.item(0).className = "ctgwht"
     cl.item(0).className = "col1"
     if (ref) {
-        // 
+        props.setAttribute("data-tlid", id)
+        props.setAttribute("data-title", title) 
+        props.setAttribute("data-date", date)
+        props.setAttribute("data-catg", category)  
     }else{
         if (refId === "") {
             var edit = props.getElementsByClassName("edit")
@@ -176,7 +179,7 @@ function timelineSelect(id, ref=false){
             props.setAttribute("data-ref", refId)
         }
     }
-    props.className = clnm
+    props.className = 'props'
 }
 
 function nextRelease(index, id) {
@@ -299,9 +302,20 @@ function fetchRelease(id) {
 function showModal() {
     var mdl = document.getElementById("rlmodal")
     var props = document.getElementById("props1")
-    var tl = props.getElementsByClassName("tlwrd")
+    mdl.setAttribute("data-tlid", props.getAttribute("data-tlid"))
+    mdl.setAttribute("data-title", props.getAttribute("data-title")) 
+    mdl.setAttribute("data-date", props.getAttribute("data-date"))
+    mdl.setAttribute("data-catg", props.getAttribute("data-catg"))
+    var catgt = props.getAttribute("data-catg")
     var pt = mdl.getElementsByClassName("tlwrd")
-    pt.item(0).innerHTML = tl.item(0).innerHTML
+    pt.item(0).innerHTML = props.getAttribute("data-title")
+    var fcategory = document.getElementById("fcategory")
+    for (let index = 0; index < fcategory.children.length; index++) {
+        if (fcategory.children.item(index).innerHTML === catgt){
+            fcategory.value = fcategory.children.item(index).getAttribute("value")
+            break
+        }
+    }
     mdl.className = "rlmodal"
 }
 
@@ -487,7 +501,95 @@ async function updateTimeline() {
     }
 }
 
-function publishRelease(e) {
-    alert("Under development")
-    e.preventDefault()
+async function publishRelease(e) {
+    var row1 = document.getElementById("rbtns")
+    var ldr = document.getElementById("ldr3")
+    var mdl = document.getElementById('rlmodal')
+    row1.className = "row1 hd"
+    ldr.className = ""
+
+    var tlid = mdl.getAttribute("data-tlid")
+    var title = mdl.getAttribute("data-title")
+    var date = mdl.getAttribute("data-date")
+    // var catgt = mdl.getAttribute("data-catg")
+    var fcategory = document.getElementById("fcategory").value
+    var synopsis = document.getElementById("synopsis").value
+    var thumb = document.getElementById("thumbnail")
+    var trler = document.getElementById("trailer")
+    var rel = document.getElementById("release")
+
+    if (synopsis !== "" &&  thumb.files.length > 0 && trler.files.length > 0 && rel.files.length > 0){
+        e.preventDefault()
+        var rld = new Date(Date.parse(date))      
+        var fmdt = new FormData()
+        fmdt.append("id", tlid)
+        fmdt.append("title", title)
+        fmdt.append("fcategory", fcategory)
+        fmdt.append("date", rld.toISOString().substring(0, 10))
+        fmdt.append("synopsis", synopsis)
+        fmdt.append("thumbnail", thumb.files[0])
+        fmdt.append("trailer", trler.files[0])
+        fmdt.append("release", rel.files[0])
+        try {
+            var resp = await fetch("http://localhost:5000/admin/db/release", {method: "POST", body: fmdt})
+            var msg = await resp.json()
+            if (msg["error"]) {
+                alert("Error publishing release \ntry again")
+                row1.className = "row1"
+                ldr.className = "hd"
+            }else{
+                // 1. remove the selected item pedning timeline list
+                var tml = document.getElementById("itl")
+                var delitm = null
+                itms = tml.getElementsByClassName("itemrl")
+                for (let index = 0; index < itms.length; index++) {
+                    if(itms.item(index).getAttribute("data-id") === tlid){
+                        delitm = itms.item(index)
+                        tml.removeChild(itms.item(index))
+                        break
+                    }
+                }
+                // 2. Add new items to release
+                var relsl = document.getElementById("irl")
+                if (delitm !== null){
+                    var rellnk = document.createElement("a")
+                    // href="/release?id={{ $v.Id }}" class="navlnk" target="_blank">Release Notes</a>
+                    rellnk.setAttribute("href", `/release?id=${msg["id"]}`)
+                    rellnk.setAttribute("class", `navlnk`)
+                    rellnk.setAttribute("target", "_blank")
+                    rellnk.innerHTML = "Release Notes"
+                    delitm.removeAttribute('onclick')
+                    delitm.appendChild(rellnk)
+                    relsl.appendChild(delitm)
+                }else{
+                    console.log("Delitem is null")
+                }
+                // 3. prevent futher submission by showing success message & close the modal plus unselect item on pending list
+                var msgdiv = document.getElementById("msg")
+                msgdiv.children.item(0).innerHTML = msg["message"]
+                msgdiv.className = "msg"
+                msgdiv.style.opacity = "1"
+                msgdiv.style.animation = 'fadeout 10s ease-in forwards'
+                ldr.className = "hd"
+                closeModal(e)
+                propToggle(1)
+                setTimeout(()=>{
+                    row1.className = "row1"
+                    msgdiv.className = "msg hd"
+                }, 2500)
+                document.getElementById("synopsis").value = ""
+                document.getElementById("fcategory").value = 0
+                // document.getElementById("thumbnail").files = []
+                // document.getElementById("trailer").files = []
+                // document.getElementById("release").files = []
+            }
+        } catch (error) {
+            console.log("Error: ", error)
+            row1.className = "row1"
+            ldr.className = "hd"
+        }
+    }else{
+        row1.className = "row1"
+        ldr.className = "hd"
+    }    
 }
