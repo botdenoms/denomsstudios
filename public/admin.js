@@ -166,6 +166,8 @@ function timelineSelect(id, ref=false){
             del.item(0).className = "btnr del"
             peek.item(0).className = "btnb pkb hd"
             rls.item(0).className = "btnb rels hd"
+            props.setAttribute("data-id", id)
+            props.removeAttribute("data-ref")
         }else{
             var edit = props.getElementsByClassName("edit")
             var del = props.getElementsByClassName("del")
@@ -177,6 +179,7 @@ function timelineSelect(id, ref=false){
             rls.item(0).className = "btnb rels"
             rls.item(0).setAttribute("href", `/release?id=${refId}`)
             props.setAttribute("data-ref", refId)
+            props.setAttribute("data-id", id)
         }
     }
     props.className = 'props'
@@ -208,7 +211,7 @@ async function peekShow() {
             ldr.className = "hd"
             btn.removeAttribute("disabled")
         }else{
-            console.log(rel["data"])
+            // console.log(rel["data"])
             var imgt = document.getElementById("peekimg")
             var sysp = document.getElementById("synp")
             imgt.setAttribute('src', rel["data"]["Thumbnail"])
@@ -247,6 +250,13 @@ function editTimeline() {
     var ctg = ct.item(0).innerHTML
     var dt = cl.item(0).children.item(1).innerHTML
 
+    // update selected id
+    for (let index = 0; index < nct.children.length; index++) {
+        if (nct.children.item(index).innerHTML === ctg){
+            nct.value = nct.children.item(index).getAttribute("value")
+            break
+        }
+    }
     var ts = Date.parse(dt)
     var rld = new Date(ts)
     // hide the items
@@ -383,52 +393,91 @@ function createItemtl(item) {
     var dto = new Date(Date.parse(item.Date))
     var dm = dto.getDate().toString().padStart(2, "0")
     var tldiv = document.createElement('div')
+    var rldiv = document.createElement('div')
     tldiv.setAttribute('class', "itemtl")
     tldiv.setAttribute('onclick', `timelineSelect('${item.Id}')`)
+    rldiv.setAttribute('class', "itemrl")
+    rldiv.setAttribute('onclick', `timelineSelect('${item.Id}', true)`)
     // tldiv.addEventListener('onclicl', timelineSelect(item.Id))
     // attribs
     tldiv.setAttribute('data-title', item.Title)
     tldiv.setAttribute('data-category', item.Category)
+    rldiv.setAttribute('data-title', item.Title)
+    rldiv.setAttribute('data-category', item.Category)
     // Human form
     tldiv.setAttribute('data-date', `${dm} ${months[dto.getMonth()]} ${dto.getFullYear()}`)
     tldiv.setAttribute('data-ref', item.Ref)
     tldiv.setAttribute('data-id', item.Id)
+    rldiv.setAttribute('data-date', `${dm} ${months[dto.getMonth()]} ${dto.getFullYear()}`)
+    rldiv.setAttribute('data-ref', item.Ref)
+    rldiv.setAttribute('data-id', item.Id)
     // children
     var row2 = document.createElement('div')
+    var row2r = document.createElement('div')
     row2.setAttribute('class', "row2")
+    row2r.setAttribute('class', "row2")
     var dy = document.createElement('span')
+    var dy1 = document.createElement('span')
     dy.setAttribute('class', "dy")
     dy.innerHTML = dm
+    dy1.setAttribute('class', "dy")
+    dy1.innerHTML = dm
     row2.appendChild(dy)
+    row2r.appendChild(dy1)
 
     var col2 = document.createElement('div')
+    var col2r = document.createElement('div')
     col2.setAttribute('class', "col2")
+    col2r.setAttribute('class', "col2")
     var m = document.createElement('span')
+    var m1 = document.createElement('span')
     m.innerHTML = months[dto.getMonth()]
+    m1.innerHTML = months[dto.getMonth()]
     var y = document.createElement('span')
+    var y1 = document.createElement('span')
     y.innerHTML = dto.getFullYear()
+    y1.innerHTML = dto.getFullYear()
     col2.appendChild(m)
     col2.appendChild(y)
     row2.appendChild(col2)
+    col2r.appendChild(m1)
+    col2r.appendChild(y1)
+    row2r.appendChild(col2r)
 
     tldiv.appendChild(row2)
+    rldiv.appendChild(row2r)
+
     var tl = document.createElement('span')
+    var tlr = document.createElement('span')
     tl.setAttribute('class', "tlwrd1")
     tl.innerHTML = item.Title
+    tlr.setAttribute('class', "tlwrd1")
+    tlr.innerHTML = item.Title
     tldiv.appendChild(tl)
+    rldiv.appendChild(tlr)
+
     var cs = document.createElement('span')
+    var csr = document.createElement('span')
     cs.setAttribute('class', "ctword1")
     cs.innerHTML = item.Category
+    csr.setAttribute('class', "ctword1")
+    csr.innerHTML = item.Category
     tldiv.appendChild(cs)
+    rldiv.appendChild(csr)
+
     var spr = document.createElement('div')
+    var spr1 = document.createElement('div')
     spr.setAttribute('class', "spr20")
+    spr1.setAttribute('class', "spr20")
     tldiv.appendChild(spr)
+    rldiv.appendChild(spr1)
 
     var tllst = document.getElementById("tllist")
+    var pnlst = document.getElementById("itl")
+    pnlst.appendChild(rldiv)
     tllst.appendChild(tldiv)
-    //                         {{ if ne $v.Ref ""}}
-    //                         <a href="/release?id={{ $v.Ref }}" class="navlnk" target="_blank">Release Notes</a>
-    //                         {{ end }}
+    var pcnt = document.getElementById("pcnt")
+    pcnt.innerHTML = document.getElementById("itl").childElementCount
 }
 
 async function updateTimeline() {
@@ -491,7 +540,25 @@ async function updateTimeline() {
             // anims
             ldr.className = "hd"
             rw1.item(0).children.item(0).className = "btnb"
-            // 3. close edit btns
+            // 3. update pending item
+            var pent = document.getElementById("itl")
+            var ptl = pent.getElementsByClassName("itemrl")
+            for (let index = 0; index < ptl.length; index++) {                
+                if(ptl.item(index).getAttribute("data-id") === msg["id"]){
+                    // date
+                    ptl.item(index).getElementsByClassName("dy").item(0).innerHTML = dy
+                    // month 
+                    ptl.item(index).getElementsByClassName("col2").item(0).children.item(0).innerHTML = months[nd.getMonth()]
+                    // year
+                    ptl.item(index).getElementsByClassName("col2").item(0).children.item(1).innerHTML = nd.getFullYear()
+                    // title
+                    ptl.item(index).getElementsByClassName("tlwrd1").item(0).innerHTML = ntl.value
+                    // category
+                    ptl.item(index).getElementsByClassName("ctword1").item(0).innerHTML = catg
+                    break
+                }
+            }
+            // 4. close edit btns
             closeEdit()
         }
     } catch (error) {
@@ -553,7 +620,6 @@ async function publishRelease(e) {
                 var relsl = document.getElementById("irl")
                 if (delitm !== null){
                     var rellnk = document.createElement("a")
-                    // href="/release?id={{ $v.Id }}" class="navlnk" target="_blank">Release Notes</a>
                     rellnk.setAttribute("href", `/release?id=${msg["id"]}`)
                     rellnk.setAttribute("class", `navlnk`)
                     rellnk.setAttribute("target", "_blank")
@@ -564,7 +630,22 @@ async function publishRelease(e) {
                 }else{
                     console.log("Delitem is null")
                 }
-                // 3. prevent futher submission by showing success message & close the modal plus unselect item on pending list
+                // 3. on Timeline update timeline item
+                var tmlt = document.getElementById("tllist")
+                itms = tmlt.getElementsByClassName("itemtl")
+                for (let index = 0; index < itms.length; index++) {
+                    if(itms.item(index).getAttribute("data-id") === tlid){
+                        itms.item(index).setAttribute("data-ref", msg["id"])
+                        var rellnk = document.createElement("a")
+                        rellnk.setAttribute("href", `/release?id=${msg["id"]}`)
+                        rellnk.setAttribute("class", `navlnk`)
+                        rellnk.setAttribute("target", "_blank")
+                        rellnk.innerHTML = "Release Notes"
+                        itms.item(index).appendChild(rellnk)
+                        break
+                    }
+                }
+                // 4. prevent futher submission by showing success message & close the modal plus unselect item on pending list
                 var msgdiv = document.getElementById("msg")
                 msgdiv.children.item(0).innerHTML = msg["message"]
                 msgdiv.className = "msg"
@@ -573,12 +654,15 @@ async function publishRelease(e) {
                 ldr.className = "hd"
                 closeModal(e)
                 propToggle(1)
+                propToggle(0)
                 setTimeout(()=>{
                     row1.className = "row1"
                     msgdiv.className = "msg hd"
                 }, 2500)
                 document.getElementById("synopsis").value = ""
                 document.getElementById("fcategory").value = 0
+                var rcnt = document.getElementById("rcnt")
+                rcnt.innerHTML = document.getElementById("irl").childElementCount
                 // document.getElementById("thumbnail").files = []
                 // document.getElementById("trailer").files = []
                 // document.getElementById("release").files = []

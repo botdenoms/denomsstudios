@@ -318,8 +318,8 @@ func HandleTemplateRequest(writer http.ResponseWriter, request *http.Request) {
 			// if not found return not found response
 			if nf {
 				tmp := map[string]interface{}{}
-				tmp["error"] = false
-				tmp["message"] = "TTimeline Update failed, Timeline item not found"
+				tmp["error"] = true
+				tmp["message"] = "Timeline Update failed, Timeline item not found"
 				tmp["id"] = id
 				data = tmp
 				writer.Header().Set("Content-Type", "application/json")
