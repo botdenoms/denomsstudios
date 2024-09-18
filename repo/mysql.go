@@ -33,7 +33,8 @@ func (d MysqlRepo) RandomRelease() model.Release {
 }
 
 func (d MysqlRepo) CreateRelease(rel model.Release) (string, bool) {
-	r, e := d.Db.Exec(`INSERT INTO Release VALUES (?, ?, ?, ?, ?, ?, ?, ?)`, rel.Id, rel.Title, rel.Category, rel.Date.Format(time.DateOnly), rel.Synopsis, rel.Thumbnail, rel.Trailer, rel.Url)
+	qry := fmt.Sprintf("INSERT INTO Release ( Title, Category, ReleaseDate, Synopsis, Thumbnail, Trailer, RelUrl) VALUES ('%v', '%v', '%v', '%v', '%v', '%v', '%v')", rel.Title, rel.Category, rel.Date.Format(time.DateOnly), rel.Synopsis, rel.Thumbnail, rel.Trailer, rel.Url)
+	r, e := d.Db.Exec(qry)
 	if e != nil {
 		fmt.Printf("Error on insert qr\nError: %v", e.Error())
 		return "", true
@@ -46,7 +47,8 @@ func (d MysqlRepo) CreateRelease(rel model.Release) (string, bool) {
 }
 
 func (d MysqlRepo) CreateTimeline(tl model.Timeline) (string, bool) {
-	r, e := d.Db.Exec(`INSERT INTO Timeline VALUES (?, ?, ?, ?, ?)`, tl.Id, tl.Title, tl.Category, tl.Ref, tl.Date.Format(time.DateOnly))
+	qry := fmt.Sprintf("INSERT INTO Timeline ( Title, Category, ReleaseId, ReleaseDate) VALUES ('%v', '%v', '%v', '%v')", tl.Title, tl.Category, tl.Ref, tl.Date.Format(time.DateOnly))
+	r, e := d.Db.Exec(qry)
 	if e != nil {
 		fmt.Printf("Error on insert qr\nError: %v", e.Error())
 		return "", true
