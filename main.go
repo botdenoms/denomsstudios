@@ -233,7 +233,7 @@ func HandleTemplateRequest(writer http.ResponseWriter, request *http.Request) {
 				fmt.Printf("Error parsing date\nError: %v\n", er.Error())
 			}
 			cati, _ := strconv.Atoi(category)
-			tl := model.Timeline{Id: "100008", Title: title, Category: categories[cati], Ref: "", Date: dt}
+			tl := model.Timeline{Id: "", Title: title, Category: categories[cati], Ref: "", Date: dt}
 			// write to db point
 			id, idr := curRepo.CreateTimeline(tl)
 			if idr {
@@ -247,6 +247,7 @@ func HandleTemplateRequest(writer http.ResponseWriter, request *http.Request) {
 				return
 			}
 			// response
+			tl.Id = id
 			tmp := map[string]interface{}{}
 			tmp["error"] = false
 			tmp["message"] = "Timeline created successfully"
@@ -482,7 +483,7 @@ func HandleTemplateRequest(writer http.ResponseWriter, request *http.Request) {
 				thumburl := "/public/thum.png"
 				trlurl := "/public/dribble.mp4"
 				relurl := "/public/dribble.mp4"
-				rel := model.Release{Id: "900005", Title: title, Category: categories[cati], Date: dt, Synopsis: synop, Thumbnail: thumburl, Trailer: trlurl, Url: relurl}
+				rel := model.Release{Id: "", Title: title, Category: categories[cati], Date: dt, Synopsis: synop, Thumbnail: thumburl, Trailer: trlurl, Url: relurl}
 				// write to db point
 				id, idr := curRepo.CreateRelease(rel)
 				if idr {
@@ -509,10 +510,12 @@ func HandleTemplateRequest(writer http.ResponseWriter, request *http.Request) {
 					json.NewEncoder(writer).Encode(data)
 					return
 				}
+				rel.Id = id
 				tmp := map[string]interface{}{}
 				tmp["error"] = false
 				tmp["message"] = "Release created & Timeline updated successfully"
 				tmp["id"] = id
+				tmp["data"] = rel
 				data = tmp
 				writer.Header().Set("Content-Type", "application/json")
 				json.NewEncoder(writer).Encode(data)
